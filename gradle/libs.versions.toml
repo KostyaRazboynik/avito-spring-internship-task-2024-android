@@ -1,0 +1,69 @@
+[versions]
+agp = "8.4.0-alpha13"
+kotlin = "1.9.22"
+coreKtx = "1.12.0"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+appcompat = "1.6.1"
+material = "1.11.0"
+activity = "1.8.2"
+constraintlayout = "2.1.4"
+ksp = "1.9.22-1.0.17"
+javaVersion = "VERSION_17"
+jvmTarget = "17"
+fragmentKtx = "1.6.2"
+paging-version = "3.2.1"
+recyclerview-version = "1.3.2"
+swiperefreshlayout-version = "1.1.0"
+viewbindingpropertydelegateFull-version = "1.5.9"
+coil-version = "2.6.0"
+dagger-version = "2.48"
+okhttp-version = "5.0.0-alpha.1"
+retrofit-version = "2.9.0"
+gson-version = "2.10.1"
+room-version = "2.6.1"
+
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-paggin = { module = "androidx.paging:paging-runtime", version.ref = "paging-version" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview-version" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout-version" }
+
+viewbinding-property-delegate-full = { module = "com.github.kirich1409:viewbindingpropertydelegate-full", version.ref = "viewbindingpropertydelegateFull-version" }
+
+coil = { group = "io.coil-kt", name = "coil", version.ref = "coil-version" }
+
+dagger = { module = "com.google.dagger:dagger-android", version.ref = "dagger-version" }
+dagger-processor = { module = "com.google.dagger:dagger-android-processor", version.ref = "dagger-version" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger-version" }
+
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp-version" }
+okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp-version" }
+
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit-version" }
+retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit-version" }
+
+gson = { module = "com.google.code.gson:gson", version.ref = "gson-version" }
+
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-version" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room-version" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-version" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version = "2.0.1"}
+
