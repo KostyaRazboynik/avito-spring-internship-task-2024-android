@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyTasksStyle">
+        <item name="collapsedTitleTextColor">@color/color_on_secondary</item>
+        <item name="contentScrim">@color/color_secondary</item>
+        <item name="expandedTitleMarginBottom">50dp</item>
+        <item name="expandedTitleTextColor">@color/color_on_secondary</item>
+    </style>
+
+    <style name="TextAppearance.CollapsingToolBar" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_primary</item>
+    </style>
+
+    <style name="TextAppearance.ExpandedToolBar" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="textAllCaps">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_primary</item>
+    </style>
+</resources>
