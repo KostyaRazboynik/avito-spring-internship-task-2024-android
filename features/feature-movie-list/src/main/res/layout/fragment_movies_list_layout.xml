@@ -1,77 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:theme="@style/Theme.KinopoiskQuickSearch"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/background_color"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/list_horizontal_padding">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:fitsSystemWindows="true"
-        android:theme="@style/Theme.KinopoiskQuickSearch"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_primary"
-            android:fitsSystemWindows="true"
-            style="@style/MyTasksStyle"
-            app:expandedTitleTextAppearance="@style/TextAppearance.CollapsingToolBar"
-            app:collapsedTitleTextAppearance="@style/TextAppearance.ExpandedToolBar"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="Фильмы">
+        <TextView
+            android:id="@+id/appTitle"
+            style="@style/MoviesText.26"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/list_top_margin"
+            android:text="@string/app_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/completed_tasks"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/filteringContainer"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/list_start_margin"
+            android:layout_marginTop="@dimen/list_top_margin"
+            android:hint="@string/select_filtering_option"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/appTitle"
+            app:layout_constraintTop_toTopOf="parent">
 
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="32dp"
-                android:layout_gravity="bottom"
-                android:gravity="center"
-
-                android:text="фильмы"
-                app:layout_collapseMode="parallax" />
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/filtering"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
 
-                app:layout_collapseMode="pin" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/optionContainer"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/list_top_margin_small"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/filteringContainer"
+            app:layout_constraintTop_toBottomOf="@id/filteringContainer">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/optionToFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/searchMovie"
+            style="@style/MoviesText.20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/list_top_margin_small"
+            android:hint="@string/search_movie"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/optionContainer" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/recycler_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_marginBottom="10dp"
-
             android:elevation="1dp"
-            tools:listitem="@layout/movie_list_item_layout"
+            tools:listitem="@layout/movie_list_item_layout" />
 
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
     </LinearLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

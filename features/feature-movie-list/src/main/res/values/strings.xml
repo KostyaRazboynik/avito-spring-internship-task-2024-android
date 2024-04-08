@@ -1,2 +1,15 @@
 <resources>
+    <string name="app_title">Films</string>
+    <string name="filter_by">Filter by:</string>
+    <string name="select_filtering_option">select filtering option</string>
+    <string name="search_movie">search movie</string>
+
+    <string-array name="filtering_options">
+        <item>Year</item>
+        <item>Genre</item>
+        <item>Country</item>
+        <item>Content Type</item>
+        <item>Rating</item>
+        <item>Age rating</item>
+    </string-array>
 </resources>
