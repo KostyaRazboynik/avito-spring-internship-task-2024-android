@@ -2,6 +2,7 @@ package com.kostyarazboynik.kinopoisksearch.dagger
 
 import android.app.Application
 import android.content.Context
+import com.kostyarazboynik.kinopoisksearch.dagger.module.BuildTypeModule
 import com.kostyarazboynik.kinopoisksearch.MainActivity
 import com.kostyarazboynik.kinopoisksearch.MoviesApp
 import com.kostyarazboynik.kinopoisksearch.dagger.module.DatabaseModule
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
+        BuildTypeModule::class,
         DatabaseModule::class,
         MoviesApiModule::class,
         RepositoryModule::class,

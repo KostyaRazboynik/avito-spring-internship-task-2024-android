@@ -38,6 +38,12 @@ android {
         jvmTarget = libs.versions.jvmTarget.get()
     }
 }
+
+secrets {
+    propertiesFileName = "secrets.properties"
+    defaultPropertiesFileName = "secrets.default.properties"
+}
+
 dependencies {
     implementation(project(":core:dagger"))
     implementation(project(":core:utils"))

@@ -5,7 +5,6 @@ import com.kostyarazboynik.kinopoisksearch.BuildConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
 
 @Module
@@ -19,20 +18,4 @@ object MoviesApiModule {
             apiKey = BuildConfig.KINOPOISK_API_KEY,
             okHttpClient = okHttpClient,
         )
-
-    @Provides
-    fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient?  {
-        if (BuildConfig.DEBUG) {
-            return OkHttpClient.Builder()
-                .addInterceptor(httpLoggingInterceptor)
-                .build()
-        }
-        return null
-    }
-
-    @Provides
-    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
 }
