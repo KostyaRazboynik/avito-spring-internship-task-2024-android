@@ -6,20 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.kostyarazboynik.utils.extensions.launchNamed
 import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.feature_movie_list.databinding.FragmentMoviesListLayoutBinding
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
 import com.kostyarazboynik.movielist.ui.list_adapter.MoviesListAdapter
-import javax.inject.Inject
+import com.kostyarazboynik.utils.extensions.launchNamed
 
 class MoviesListFragment : Fragment() {
-
 
     private val viewModel: MoviesListFragmentViewModel by lazy {
         (context?.applicationContext as FeatureMovieListUiComponentProvider)
@@ -39,12 +36,11 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadRemoteData()
         setUpRecyclerView()
         updateUI()
     }
 
-    //
+
     private fun setUpRecyclerView() {
         binding.recyclerView.apply {
             adapter = MoviesListAdapter(
@@ -54,76 +50,21 @@ class MoviesListFragment : Fragment() {
         }
     }
 
-    //
-//    private fun setUpData() {
-//        if (viewModel.isFirstInitializing()) {
-//            binding.swipeRefreshLayout.waitLoadingUp()
-//            viewModel.setInitialized()
-//            viewModel.loadRemoteData()
-//        } else {
-//            viewModel.loadLocalData()
-//        }
-//    }
-//
-//    private fun View.waitLoadingUp() {
-//        alpha = 0f
-//        setLoaderUpVisibility(true)
-//        animate()
-//            .setDuration(COMPANIES_FIRST_LOADING_DURATION_MS)
-//            .withEndAction {
-//                setLoaderUpVisibility(false)
-//                animate()
-//                    .setDuration(SHOW_COMPANIES_LIST_DURATION_MS)
-//                    .alpha(1f)
-//                    .start()
-//            }
-//            .start()
-//
-//    }
-//
-//    private fun View.waitLoadingDown() {
-//        setLoaderDownVisibility(true)
-//        animate()
-//            .setDuration(COMPANIES_FIRST_LOADING_DURATION_MS)
-//            .withEndAction {
-//                setLoaderDownVisibility(false)
-//                viewModel.loadRemoteData()
-//            }
-//            .start()
-//    }
-//
-//    private fun setLoaderUpVisibility(isVisible: Boolean) {
-//        binding.apply {
-//            progressLoaderUp.isVisible = isVisible
-//            companiesLoadingUp.isVisible = isVisible
-//        }
-//    }
-//
-//    private fun setLoaderDownVisibility(isVisible: Boolean) {
-//        binding.apply {
-//            progressLoaderDown.isVisible = isVisible
-//        }
-//    }
-//
     private fun updateUI() =
         viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-updateUI") {
             updateStateUI()
         }
 
-    //
     private suspend fun updateStateUI() {
-        viewModel.companiesListFlow.collect { uiState ->
+        viewModel.stateFlow.collect { uiState ->
             when (uiState) {
                 is UiState.Initial -> Unit
-                is UiState.Success -> listAdapter.submitList(uiState.data)
-                is UiState.Error -> {
-                    when (uiState.code) {
-                        400 -> makeToast(uiState.cause)
-                        401 -> makeToast("401")
-                        500 -> makeToast("500")
-                        else -> makeToast("unknown")
-                    }
+                is UiState.Loading -> {
+                    makeToast("loading")
+                    listAdapter.submitList(uiState.data?: listOf())
                 }
+                is UiState.Success -> listAdapter.submitList(uiState.data)
+                is UiState.Error<*> -> makeToast(uiState.cause ?: "error")
             }
         }
     }
@@ -134,8 +75,6 @@ class MoviesListFragment : Fragment() {
 
     companion object {
         private const val TAG = "MoviesListFragment"
-        private const val COMPANIES_FIRST_LOADING_DURATION_MS = 3000L
-        private const val SHOW_COMPANIES_LIST_DURATION_MS = 300L
 
         fun newInstance() = MoviesListFragment()
     }

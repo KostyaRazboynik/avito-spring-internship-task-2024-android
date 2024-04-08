@@ -4,6 +4,7 @@ data class Movie(
     val id: Int,
     val name: String?,
     val description: String?,
+    val shortDescription: String?,
     val poster: MoviePoster?,
     val rating: MovieRating?,
     val ageRating: Int?,

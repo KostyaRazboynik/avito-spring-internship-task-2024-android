@@ -7,10 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.kostyarazboynik.moviedatabase.converters.MovieCountryConverter
 import com.kostyarazboynik.moviedatabase.converters.MovieGenreConverter
-import com.kostyarazboynik.moviedatabase.converters.MoviePersonsConverter
 import com.kostyarazboynik.moviedatabase.dao.MovieDao
 import com.kostyarazboynik.moviedatabase.model.MovieDbo
-import com.kostyarazboynik.moviedatabase.model.MoviePersonDbo
 
 
 /**
@@ -29,7 +27,6 @@ class MovieDatabase internal constructor(
 @TypeConverters(
     MovieCountryConverter::class,
     MovieGenreConverter::class,
-    MoviePersonsConverter::class,
 )
 internal abstract class MovieRoomDatabase : RoomDatabase() {
 

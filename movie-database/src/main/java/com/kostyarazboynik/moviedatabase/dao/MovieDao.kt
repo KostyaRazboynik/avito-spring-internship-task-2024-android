@@ -3,6 +3,7 @@ package com.kostyarazboynik.moviedatabase.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.kostyarazboynik.moviedatabase.model.MovieDbo
 import kotlinx.coroutines.flow.Flow
@@ -11,14 +12,14 @@ import kotlinx.coroutines.flow.Flow
 interface MovieDao {
 
     @Query("SELECT * FROM movies")
-    fun getMoviesFlow(): Flow<List<MovieDbo>>
+    suspend fun getAllMovies(): List<MovieDbo>
 
-    @Insert
+    @Query("SELECT * FROM movies")
+    fun getAllMoviesFlow(): Flow<List<MovieDbo>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(movies: List<MovieDbo>)
 
     @Delete
     suspend fun remove(movies: List<MovieDbo>)
-
-//    @Query("DELETE FROM movies")
-//    suspend fun clean(movies: List<MovieDbo>)
 }
