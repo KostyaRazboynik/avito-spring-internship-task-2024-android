@@ -1,51 +1,92 @@
 package com.kostyarazboynik.moviedata
 
-import com.kostyarazboynik.domain.model.DataState
-import com.kostyarazboynik.kinopoiskapi.MoviesApi
-import com.kostyarazboynik.moviedata.mapper.toMovie
+import com.kostyarazboynik.domain.data.MergeStrategy
+import com.kostyarazboynik.domain.model.RequestResult
 import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.domain.repository.MovieRemoteRepository
-import com.kostyarazboynik.utils.Logger
+import com.kostyarazboynik.kinopoiskapi.MoviesApi
+import com.kostyarazboynik.kinopoiskapi.model.dto.MovieDto
+import com.kostyarazboynik.kinopoiskapi.model.response.MovieListResponse
+import com.kostyarazboynik.moviedata.mapper.toMovie
+import com.kostyarazboynik.moviedata.mapper.toMovieDbo
+import com.kostyarazboynik.moviedata.utils.map
+import com.kostyarazboynik.moviedata.utils.toRequestResult
+import com.kostyarazboynik.moviedatabase.MovieDatabase
+import com.kostyarazboynik.moviedatabase.model.MovieDbo
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class MovieRemoteRepositoryImpl @Inject constructor(
-    private val api: MoviesApi
-): MovieRemoteRepository {
+    private val api: MoviesApi,
+    private val database: MovieDatabase,
+) : MovieRemoteRepository {
 
-    override suspend fun getAll(): Flow<DataState<List<Movie>>> = flow {
-        try {
-            Logger.d(TAG, "getAll")
-            val networkListResponse = api.loadMovies()
-            if (networkListResponse.isSuccessful) {
-                networkListResponse.body()?.let { responseList ->
-                    emit(DataState.Result(responseList.movieList.mapNotNull { movieDto ->
-                        Logger.d(TAG, "id=${movieDto.id}")
-                        api.loadMovieDetail(
-                            movieDto.id
-                        ).body()?.toMovie()
-                    }))
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getAll(
+        mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>?,
+    ): Flow<RequestResult<List<Movie>>> {
+        val cachedMoviesFlow: Flow<RequestResult<List<Movie>>> = getAllFromDataBase()
+        val remoteMoviesFlow: Flow<RequestResult<List<Movie>>> = getAllFromServer()
+        val mergeStrategyChecked = mergeStrategy ?: RequestResultMergeStrategy<List<Movie>>()
+
+        return cachedMoviesFlow.combine(remoteMoviesFlow, mergeStrategyChecked::merge)
+            .flatMapConcat { result ->
+                if (result is RequestResult.Success) {
+                    database.moviesDbo.getAllMoviesFlow()
+                        .map { dbos -> dbos.map { it.toMovie() } }
+                        .map { RequestResult.Success(it) }
+                } else {
+                    flowOf(result)
                 }
-            } else {
-                val exception = HttpException(networkListResponse)
-                Logger.d(TAG, "else brunch, ")
-                emit(DataState.Exception(exception, exception.code()))
-                networkListResponse.errorBody()?.close()
             }
-        } catch (exception: HttpException) {
-            Logger.d(TAG, "HttpException: $exception, ")
-            emit(DataState.Exception(exception, exception.code()))
-        } catch (exception: Exception) {
-            Logger.d(TAG, "exception: $exception, ")
+    }
 
-            emit(DataState.Exception(exception, UNKNOWN_EXCEPTION_CODE))
-        }
+    override fun fetchLatest(): Flow<RequestResult<List<Movie>>> = getAllFromServer()
+
+    private fun getAllFromDataBase(): Flow<RequestResult<List<Movie>>> {
+        val dbRequest: Flow<RequestResult<List<MovieDbo>>> =
+            database.moviesDbo::getAllMovies.asFlow()
+                .map { RequestResult.Success(it) }
+
+        val start = flowOf<RequestResult<List<MovieDbo>>>(RequestResult.InProgress())
+
+        return merge(dbRequest, start)
+            .map { result -> result.map { movieDbos -> movieDbos.map { it.toMovie() } } }
+    }
+
+    private fun getAllFromServer(): Flow<RequestResult<List<Movie>>> {
+        val apiRequest: Flow<RequestResult<MovieListResponse>> = flow { emit(api.loadMovies()) }
+            .onEach { result ->
+                if (result.isSuccess) {
+                    saveNetworkResponseToCache(result.getOrThrow().movieList)
+                }
+            }
+            .map { result -> result.toRequestResult() }
+
+        val start = flowOf<RequestResult<MovieListResponse>>(RequestResult.InProgress())
+
+        return merge(apiRequest, start)
+            .map { result: RequestResult<MovieListResponse> ->
+                result.map { response: MovieListResponse ->
+                    response.movieList.map { it.toMovie() }
+                }
+            }
+    }
+
+    private suspend fun saveNetworkResponseToCache(data: List<MovieDto>) {
+        database.moviesDbo.insert(data.map { it.toMovieDbo() })
     }
 
     private companion object {
-        private const val UNKNOWN_EXCEPTION_CODE = -1
         private const val TAG = "MovieRemoteRepository"
     }
 }

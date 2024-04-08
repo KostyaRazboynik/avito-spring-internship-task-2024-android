@@ -5,6 +5,6 @@ import androidx.room.Entity
 
 @Entity(tableName = "posters")
 data class MoviePosterDbo(
-    @ColumnInfo("url") val url: String,
-    @ColumnInfo("previewUrl") val previewUrl: String,
+    @ColumnInfo("url") val url: String?,
+    @ColumnInfo("previewUrl") val previewUrl: String?,
 )

@@ -9,7 +9,6 @@ import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.create
 import retrofit2.http.GET
@@ -27,12 +26,12 @@ interface MoviesApi {
         @Query("limit") limit: Int = 20,
         @Query("sortField") sortField: String = "votes.kp",
         @Query("sortType") sortType: Int = -1,
-    ): Response<MovieListResponse>
+    ): Result<MovieListResponse>
 
     @GET("/v1.4/movie/{id}")
     suspend fun loadMovieDetail(
         @Path("id") movieId: Int,
-    ): Response<MovieDetailedDto>
+    ): Result<MovieDetailedDto>
 
     @GET("/v1.4/movie/search")
     suspend fun searchMovie(
@@ -40,7 +39,7 @@ interface MoviesApi {
         @Query("page") page: Int = 1,
         @Query("sortField") sortField: String = "votes.kp",
         @Query("sortType") sortType: Int = -1,
-    ): Response<MovieListResponse>
+    ): Result<MovieListResponse>
 
     @GET("/v1.4/review")
     suspend fun loadMovieReviews(
@@ -49,7 +48,7 @@ interface MoviesApi {
         @Query("limit") limit: Int = 5,
         @Query("sortField") sortField: String = "reviewLikes",
         @Query("sortType") sortType: Int = -1,
-    ): Response<ReviewListResponse>
+    ): Result<ReviewListResponse>
 
     @GET("/v1.4/review")
     suspend fun loadMovieReviewTyped(
@@ -59,14 +58,14 @@ interface MoviesApi {
         @Query("limit") limit: Int = 5,
         @Query("sortField") sortField: String = "reviewLikes",
         @Query("sortType") sortType: Int = -1,
-    ): Response<ReviewListResponse>
+    ): Result<ReviewListResponse>
 
     @GET("/v1.4/image")
     suspend fun loadMovieImage(
         @Query("movieId") movieId: Int,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 30,
-    ): Response<ReviewListResponse>
+    ): Result<ReviewListResponse>
 }
 
 fun MoviesApi(
