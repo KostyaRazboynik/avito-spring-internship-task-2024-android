@@ -18,7 +18,6 @@ class MoviesListAdapter(
                 parent,
                 false
             ),
-            parent.context
         )
 
     override fun onBindViewHolder(holder: MoviesListViewHolder, position: Int) {

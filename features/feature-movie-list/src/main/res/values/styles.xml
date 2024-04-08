@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="MoviesText">
         <item name="fontFamily">@font/segoe</item>
         <item name="android:textColor">@color/highlight_text_color</item>
@@ -8,11 +7,15 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="MoviesText.26">
+    <style name="MoviesText.30">
         <item name="android:textSize">@dimen/text_30</item>
     </style>
 
     <style name="MoviesText.20">
         <item name="android:textSize">@dimen/text_20</item>
+    </style>
+
+    <style name="MoviesText.16">
+        <item name="android:textSize">@dimen/test_16</item>
     </style>
 </resources>

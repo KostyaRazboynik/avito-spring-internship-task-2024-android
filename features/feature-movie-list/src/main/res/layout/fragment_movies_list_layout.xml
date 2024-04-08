@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/appTitle"
-            style="@style/MoviesText.26"
+            style="@style/MoviesText.30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_top_margin"
@@ -38,7 +38,9 @@
                 android:id="@+id/filtering"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +59,9 @@
                 android:id="@+id/optionToFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

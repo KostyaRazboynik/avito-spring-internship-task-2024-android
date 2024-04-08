@@ -17,6 +17,7 @@ import com.kostyarazboynik.feature_movie_list.R
 import com.kostyarazboynik.feature_movie_list.databinding.FragmentMoviesListLayoutBinding
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
 import com.kostyarazboynik.movielist.ui.list_adapter.MoviesListAdapter
+import com.kostyarazboynik.movielist.ui.utils.Constants
 import com.kostyarazboynik.utils.extensions.launchNamed
 
 class MoviesListFragment : Fragment() {
@@ -40,12 +41,12 @@ class MoviesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.loadData()
-        setUpViews()
+        setUpFilteringOptionSelector()
         setUpRecyclerView()
         updateUI()
     }
 
-    private fun setUpViews() {
+    private fun setUpFilteringOptionSelector() {
         binding.apply {
             filtering.apply {
                 setAdapter(
@@ -56,18 +57,41 @@ class MoviesListFragment : Fragment() {
                     )
                 )
                 setOnItemClickListener { parent, _, position, _ ->
-                    val item = parent.getItemAtPosition(position)
-                    makeToast("Item $item")
-                    optionContainer.isVisible = true
-                    optionContainer.hint = "select ${item.toString().lowercase()}"
-                    optionToFilter.setAdapter(
-                        ArrayAdapter(
-                            context,
-                            R.layout.selectable_item_layout,
-                            viewModel.getCountries()
+                    val item = parent.getItemAtPosition(position).toString().lowercase()
+                    if (item == Constants.NONE) {
+                        updateUI()
+                        optionContainer.isVisible = false
+                    } else {
+                        setUpOptionSelector(item)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setUpOptionSelector(item: String) {
+        binding.apply {
+            optionToFilter.apply {
+                text.clear()
+                setAdapter(
+                    ArrayAdapter(
+                        context,
+                        R.layout.selectable_item_layout,
+                        viewModel.getOption(item)
+                    )
+                )
+                setOnItemClickListener { parentFilter, _, positionFilter, _ ->
+                    listAdapter.submitList(
+                        viewModel.filterMovies(
+                            item,
+                            parentFilter.getItemAtPosition(positionFilter).toString()
                         )
                     )
                 }
+            }
+            optionContainer.apply {
+                isVisible = true
+                hint = context.getString(R.string.select_option, item)
             }
         }
     }
@@ -95,8 +119,12 @@ class MoviesListFragment : Fragment() {
                     listAdapter.submitList(uiState.data ?: listOf())
                 }
 
-                is UiState.Success -> listAdapter.submitList(uiState.data)
-                is UiState.Error<*> -> makeToast(uiState.cause ?: "error")
+                is UiState.Success -> {
+                    makeToast("success")
+                    listAdapter.submitList(uiState.data)
+                }
+
+                is UiState.Error -> makeToast(uiState.cause ?: "error")
             }
         }
     }
@@ -105,7 +133,7 @@ class MoviesListFragment : Fragment() {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
-    companion object {
+    internal companion object {
         private const val TAG = "MoviesListFragment"
 
         fun newInstance() = MoviesListFragment()
