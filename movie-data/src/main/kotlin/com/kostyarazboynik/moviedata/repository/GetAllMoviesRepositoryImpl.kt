@@ -35,7 +35,7 @@ class GetAllMoviesRepositoryImpl @Inject constructor(
     override fun getAllMovies(
         mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>?,
     ): Flow<RequestResult<List<Movie>>> {
-        val cachedMoviesFlow: Flow<RequestResult<List<Movie>>> = getAllFromDataBase()
+        val cachedMoviesFlow: Flow<RequestResult<List<Movie>>> = getAllFromDatabase()
         val remoteMoviesFlow: Flow<RequestResult<List<Movie>>> = getAllFromServer()
         val mergeStrategyChecked = mergeStrategy ?: RequestResultMergeStrategy<List<Movie>>()
 
@@ -53,7 +53,7 @@ class GetAllMoviesRepositoryImpl @Inject constructor(
 
     override fun fetchLatest(): Flow<RequestResult<List<Movie>>> = getAllFromServer()
 
-    private fun getAllFromDataBase(): Flow<RequestResult<List<Movie>>> {
+    private fun getAllFromDatabase(): Flow<RequestResult<List<Movie>>> {
         val dbRequest: Flow<RequestResult<List<MovieDbo>>> =
             database.moviesDbo::getAllMovies.asFlow()
                 .map { RequestResult.Success(it) }
