@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.kostyarazboynik.dagger.FeatureScope
 import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie
-import com.kostyarazboynik.domain.usecase.UseCase
+import com.kostyarazboynik.domain.usecase.GetAllLocalMoviesUseCase
+import com.kostyarazboynik.domain.usecase.GetAllMoviesUseCase
+import com.kostyarazboynik.domain.usecase.SearchMovieUseCase
 import com.kostyarazboynik.movielist.ui.utils.Constants
 import com.kostyarazboynik.movielist.ui.utils.getAgeRatings
 import com.kostyarazboynik.movielist.ui.utils.getCountries
@@ -26,16 +28,32 @@ import javax.inject.Inject
 
 @FeatureScope
 class MoviesListFragmentViewModel @Inject constructor(
-    private val useCase: UseCase,
+    private val getAllMoviesUseCase: GetAllMoviesUseCase,
+    private val searchMovieUseCase: SearchMovieUseCase,
+    private val getAllLocalMoviesUseCase: GetAllLocalMoviesUseCase,
 ) : ViewModel() {
 
     private val _uiStateFlow: MutableStateFlow<UiState<List<Movie>>> =
         MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState<List<Movie>>> = _uiStateFlow
 
-    fun loadData() {
+    fun loadAllData() {
         viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
-            _uiStateFlow.emitAll(useCase())
+            _uiStateFlow.emitAll(getAllMoviesUseCase())
+        }
+    }
+
+    fun loadLocalData() {
+        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
+            _uiStateFlow.emitAll(getAllLocalMoviesUseCase())
+        }
+    }
+
+    fun searchMovie(movieName: String) {
+        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
+            searchMovieUseCase(movieName).collect {
+                _uiStateFlow.emitAll(searchMovieUseCase(movieName))
+            }
         }
     }
 
@@ -51,34 +69,18 @@ class MoviesListFragmentViewModel @Inject constructor(
         }
     }
 
-    fun filterMovies(filteringOption: String, option: String): List<Movie> {
-        return when (val state = uiStateFlow.value) {
-            is UiState.Initial -> listOf()
-            is UiState.Loading -> {
-                if (state.data == null) listOf()
-                else filterMovies(filteringOption, option, state.data!!)
-            }
-
-            is UiState.Success -> filterMovies(filteringOption, option, state.data)
-            is UiState.Error -> {
-                if (state.data == null) listOf()
-                else filterMovies(filteringOption, option, state.data!!)
-            }
-        }
-    }
-
-    private fun filterMovies(
+    fun filterMovies(
         filteringOption: String,
-        option: String,
+        optionType: String,
         movies: List<Movie>
     ): List<Movie> {
         return when (filteringOption) {
-            Constants.AGE_RATING -> getMoviesByAgeRating(movies, option)
-            Constants.RATING -> getMoviesByRating(movies, option)
-            Constants.COUNTRY -> getMoviesByCountry(movies, option)
-            Constants.CONTENT_TYPE -> getMoviesByContentType(movies, option)
-            Constants.YEAR -> getMoviesByYear(movies, option)
-            Constants.GENRE -> getMoviesByGenre(movies, option)
+            Constants.AGE_RATING -> getMoviesByAgeRating(movies, optionType)
+            Constants.RATING -> getMoviesByRating(movies, optionType)
+            Constants.COUNTRY -> getMoviesByCountry(movies, optionType)
+            Constants.CONTENT_TYPE -> getMoviesByContentType(movies, optionType)
+            Constants.YEAR -> getMoviesByYear(movies, optionType)
+            Constants.GENRE -> getMoviesByGenre(movies, optionType)
             else -> error("Unreachable brunch")
         }
     }

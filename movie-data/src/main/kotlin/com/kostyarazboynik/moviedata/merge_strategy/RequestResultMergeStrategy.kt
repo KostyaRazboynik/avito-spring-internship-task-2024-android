@@ -1,4 +1,4 @@
-package com.kostyarazboynik.moviedata
+package com.kostyarazboynik.moviedata.merge_strategy
 
 import com.kostyarazboynik.domain.data.MergeStrategy
 import com.kostyarazboynik.domain.model.RequestResult

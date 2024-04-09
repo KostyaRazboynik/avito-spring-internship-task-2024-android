@@ -35,8 +35,9 @@ interface MoviesApi {
 
     @GET("/v1.4/movie/search")
     suspend fun searchMovie(
-        @Query("search") searchName: String,
+        @Query("query") searchName: String,
         @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 20,
         @Query("sortField") sortField: String = "votes.kp",
         @Query("sortType") sortType: Int = -1,
     ): Result<MovieListResponse>

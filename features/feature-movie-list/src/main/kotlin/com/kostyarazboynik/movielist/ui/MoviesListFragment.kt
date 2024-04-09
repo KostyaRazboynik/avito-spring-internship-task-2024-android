@@ -13,12 +13,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.CreateMethod
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.kostyarazboynik.domain.model.UiState
+import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.feature_movie_list.R
 import com.kostyarazboynik.feature_movie_list.databinding.FragmentMoviesListLayoutBinding
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
 import com.kostyarazboynik.movielist.ui.list_adapter.MoviesListAdapter
 import com.kostyarazboynik.movielist.ui.utils.Constants
-import com.kostyarazboynik.utils.extensions.launchNamed
+import com.kostyarazboynik.movielist.ui.utils.textChanges
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class MoviesListFragment : Fragment() {
 
@@ -40,15 +48,49 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadData()
-        setUpFilteringOptionSelector()
+        viewModel.viewModelScope.launch {
+            viewModel.uiStateFlow.collect {
+                updateUIState(it)
+            }
+        }
+        viewModel.loadAllData()
+        setUpFilterOptions()
+        setUpSearchField()
+        setUpSwipeRefreshListener()
         setUpRecyclerView()
-        updateUI()
     }
 
-    private fun setUpFilteringOptionSelector() {
+    @OptIn(FlowPreview::class)
+    private fun setUpSearchField() {
+        binding.searchMovie.apply {
+            textChanges()
+                .filterNot { it.isNullOrBlank() }
+                .debounce(1000)
+                .distinctUntilChanged()
+                .onEach {
+                    viewModel.searchMovie(this.text.toString())
+                }
+                .launchIn(viewModel.viewModelScope)
+        }
+    }
+
+    private fun setUpSwipeRefreshListener() {
         binding.apply {
-            filtering.apply {
+            swipeRefreshLayout.apply {
+                setOnRefreshListener {
+                    filterOptionTypesContainer.isVisible = false
+                    filterOptions.text.clear()
+                    searchMovie.text.clear()
+                    viewModel.loadLocalData()
+                    isRefreshing = false
+                }
+            }
+        }
+    }
+
+    private fun setUpFilterOptions() {
+        binding.apply {
+            filterOptions.apply {
                 setAdapter(
                     ArrayAdapter(
                         context,
@@ -60,18 +102,18 @@ class MoviesListFragment : Fragment() {
                     val item = parent.getItemAtPosition(position).toString().lowercase()
                     if (item == Constants.NONE) {
                         updateUI()
-                        optionContainer.isVisible = false
+                        filterOptionTypesContainer.isVisible = false
                     } else {
-                        setUpOptionSelector(item)
+                        setUpFilterOptionTypes(item)
                     }
                 }
             }
         }
     }
 
-    private fun setUpOptionSelector(item: String) {
+    private fun setUpFilterOptionTypes(item: String) {
         binding.apply {
-            optionToFilter.apply {
+            filterOptionTypes.apply {
                 text.clear()
                 setAdapter(
                     ArrayAdapter(
@@ -80,19 +122,33 @@ class MoviesListFragment : Fragment() {
                         viewModel.getOption(item)
                     )
                 )
-                setOnItemClickListener { parentFilter, _, positionFilter, _ ->
-                    listAdapter.submitList(
-                        viewModel.filterMovies(
-                            item,
-                            parentFilter.getItemAtPosition(positionFilter).toString()
-                        )
-                    )
+                setOnItemClickListener { _, _, _, _ ->
+                    updateUI()
                 }
             }
-            optionContainer.apply {
+            filterOptionTypesContainer.apply {
                 isVisible = true
                 hint = context.getString(R.string.select_option, item)
             }
+        }
+    }
+
+    private fun setCurrentFilters(movies: List<Movie>) {
+        binding.apply {
+            listAdapter.submitList(
+                if (filterOptions.text.toString().lowercase() == Constants.NONE ||
+                    filterOptions.text.toString().isEmpty() ||
+                    filterOptionTypes.text.toString().isEmpty()
+                ) {
+                    movies
+                } else {
+                    viewModel.filterMovies(
+                        filterOptions.text.toString().lowercase(),
+                        filterOptionTypes.text.toString(),
+                        movies
+                    )
+                }
+            )
         }
     }
 
@@ -105,27 +161,20 @@ class MoviesListFragment : Fragment() {
         }
     }
 
-    private fun updateUI() =
-        viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-updateUI") {
-            updateStateUI()
-        }
-
-    private suspend fun updateStateUI() {
-        viewModel.uiStateFlow.collect { uiState ->
-            when (uiState) {
-                is UiState.Initial -> Unit
-                is UiState.Loading -> {
-                    makeToast("loading")
-                    listAdapter.submitList(uiState.data ?: listOf())
-                }
-
-                is UiState.Success -> {
-                    makeToast("success")
-                    listAdapter.submitList(uiState.data)
-                }
-
-                is UiState.Error -> makeToast(uiState.cause ?: "error")
+    private fun updateUI() {
+        viewModel.viewModelScope.launch {
+            viewModel.uiStateFlow.collect { uiState ->
+                updateUIState(uiState)
             }
+        }
+    }
+
+    private fun updateUIState(uiState: UiState<List<Movie>>) {
+        when (uiState) {
+            is UiState.Initial -> Unit
+            is UiState.Loading -> setCurrentFilters(uiState.data ?: listOf())
+            is UiState.Success -> setCurrentFilters(uiState.data)
+            is UiState.Error -> makeToast(uiState.cause ?: "error")
         }
     }
 
@@ -133,7 +182,7 @@ class MoviesListFragment : Fragment() {
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
     }
 
-    internal companion object {
+    companion object {
         private const val TAG = "MoviesListFragment"
 
         fun newInstance() = MoviesListFragment()

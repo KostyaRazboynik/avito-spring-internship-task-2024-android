@@ -1,12 +1,13 @@
-package com.kostyarazboynik.moviedata
+package com.kostyarazboynik.moviedata.repository
 
 import com.kostyarazboynik.domain.data.MergeStrategy
 import com.kostyarazboynik.domain.model.RequestResult
 import com.kostyarazboynik.domain.model.movie.Movie
-import com.kostyarazboynik.domain.repository.MovieRemoteRepository
+import com.kostyarazboynik.domain.repository.GetAllMoviesRepository
 import com.kostyarazboynik.kinopoiskapi.MoviesApi
 import com.kostyarazboynik.kinopoiskapi.model.dto.MovieDto
 import com.kostyarazboynik.kinopoiskapi.model.response.MovieListResponse
+import com.kostyarazboynik.moviedata.merge_strategy.RequestResultMergeStrategy
 import com.kostyarazboynik.moviedata.mapper.toMovie
 import com.kostyarazboynik.moviedata.mapper.toMovieDbo
 import com.kostyarazboynik.moviedata.utils.map
@@ -25,13 +26,13 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-class MovieRemoteRepositoryImpl @Inject constructor(
+class GetAllMoviesRepositoryImpl @Inject constructor(
     private val api: MoviesApi,
     private val database: MovieDatabase,
-) : MovieRemoteRepository {
+) : GetAllMoviesRepository {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun getAll(
+    override fun getAllMovies(
         mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>?,
     ): Flow<RequestResult<List<Movie>>> {
         val cachedMoviesFlow: Flow<RequestResult<List<Movie>>> = getAllFromDataBase()
@@ -77,7 +78,12 @@ class MovieRemoteRepositoryImpl @Inject constructor(
         return merge(apiRequest, start)
             .map { result: RequestResult<MovieListResponse> ->
                 result.map { response: MovieListResponse ->
-                    response.movieList.map { it.toMovie() }
+                    response.movieList
+                        .map { it.toMovie() }
+                        .filter { movie ->
+                            val rating = movie.rating?.kp
+                            rating != null && rating > 0
+                        }
                 }
             }
     }
@@ -87,6 +93,6 @@ class MovieRemoteRepositoryImpl @Inject constructor(
     }
 
     private companion object {
-        private const val TAG = "MovieRemoteRepository"
+        private const val TAG = "GetAllMoviesRepositoryImpl"
     }
 }

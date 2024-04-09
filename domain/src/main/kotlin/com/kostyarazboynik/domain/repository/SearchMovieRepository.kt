@@ -5,10 +5,10 @@ import com.kostyarazboynik.domain.model.RequestResult
 import com.kostyarazboynik.domain.model.movie.Movie
 import kotlinx.coroutines.flow.Flow
 
-interface MovieRemoteRepository {
-    fun getAll(
-        mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>? = null
-    ): Flow<RequestResult<List<Movie>>>
+interface SearchMovieRepository {
 
-    fun fetchLatest(): Flow<RequestResult<List<Movie>>>
+    fun searchMovie(
+        movieName: String,
+        mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>? = null,
+    ): Flow<RequestResult<List<Movie>>>
 }
