@@ -9,6 +9,7 @@
     <dimen name="list_start_margin">15dp</dimen>
     <dimen name="list_top_margin_small">5dp</dimen>
 
+    <dimen name="list_item_min_height">225dp</dimen>
     <dimen name="list_item_corner_radius">16dp</dimen>
     <dimen name="list_item_margin">8dp</dimen>
 </resources>

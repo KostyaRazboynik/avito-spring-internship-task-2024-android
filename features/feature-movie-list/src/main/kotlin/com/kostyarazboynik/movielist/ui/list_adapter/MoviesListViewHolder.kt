@@ -1,8 +1,6 @@
 package com.kostyarazboynik.movielist.ui.list_adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.kostyarazboynik.domain.model.movie.Movie

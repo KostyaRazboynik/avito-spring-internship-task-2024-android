@@ -22,8 +22,7 @@ class MoviesListAdapter(
 
     override fun onBindViewHolder(holder: MoviesListViewHolder, position: Int) {
         holder.bind(getItem(position))
-
-        if (position == itemCount - 1) {
+        if (position == itemCount - 1 && currentList.size > 10 || currentList.size == 0) {
             loadNewCompaniesCallBack()
         }
     }

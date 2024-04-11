@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetAllMoviesRepository {
     fun getAllMovies(
+        page: Int,
         mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>? = null,
     ): Flow<RequestResult<List<Movie>>>
-
-    fun fetchLatest(): Flow<RequestResult<List<Movie>>>
 }

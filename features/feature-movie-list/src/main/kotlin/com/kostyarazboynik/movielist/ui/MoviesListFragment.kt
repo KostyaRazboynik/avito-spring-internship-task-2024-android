@@ -48,16 +48,35 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.viewModelScope.launch {
-            viewModel.uiStateFlow.collect {
-                updateUIState(it)
-            }
-        }
         viewModel.loadAllData()
         setUpFilterOptions()
         setUpSearchField()
         setUpSwipeRefreshListener()
         setUpRecyclerView()
+        updateUI()
+    }
+
+    private fun setUpFilterOptions() {
+        binding.apply {
+            filterOptions.apply {
+                setAdapter(
+                    ArrayAdapter(
+                        context,
+                        R.layout.selectable_item_layout,
+                        resources.getStringArray(R.array.filtering_options).toList()
+                    )
+                )
+                setOnItemClickListener { parent, _, position, _ ->
+                    val item = parent.getItemAtPosition(position).toString().lowercase()
+                    if (item == Constants.NONE) {
+                        updateUI()
+                        filterOptionTypesContainer.isVisible = false
+                    } else {
+                        setUpFilterOptionTypes(item)
+                    }
+                }
+            }
+        }
     }
 
     @OptIn(FlowPreview::class)
@@ -83,29 +102,6 @@ class MoviesListFragment : Fragment() {
                     searchMovie.text.clear()
                     viewModel.loadLocalData()
                     isRefreshing = false
-                }
-            }
-        }
-    }
-
-    private fun setUpFilterOptions() {
-        binding.apply {
-            filterOptions.apply {
-                setAdapter(
-                    ArrayAdapter(
-                        context,
-                        R.layout.selectable_item_layout,
-                        resources.getStringArray(R.array.filtering_options).toList()
-                    )
-                )
-                setOnItemClickListener { parent, _, position, _ ->
-                    val item = parent.getItemAtPosition(position).toString().lowercase()
-                    if (item == Constants.NONE) {
-                        updateUI()
-                        filterOptionTypesContainer.isVisible = false
-                    } else {
-                        setUpFilterOptionTypes(item)
-                    }
                 }
             }
         }
@@ -153,11 +149,17 @@ class MoviesListFragment : Fragment() {
     }
 
     private fun setUpRecyclerView() {
-        binding.recyclerView.apply {
-            adapter = MoviesListAdapter(
-                loadNewCompaniesCallBack = { }
-            )
-            layoutManager = GridLayoutManager(context, 2)
+        binding.apply {
+            recyclerView.apply {
+                adapter = MoviesListAdapter(
+                    loadNewCompaniesCallBack = {
+                        if (searchMovie.text.isEmpty()) {
+                            viewModel.loadAllDataForced()
+                        }
+                    }
+                )
+                layoutManager = GridLayoutManager(context, 2)
+            }
         }
     }
 

@@ -12,5 +12,5 @@ class GetAllMoviesUseCase @Inject constructor(
     private val repository: GetAllMoviesRepository
 ) {
 
-    operator fun invoke(): Flow<UiState<List<Movie>>> = repository.getAllMovies().map { it.toUiState() }
+    operator fun invoke(page: Int): Flow<UiState<List<Movie>>> = repository.getAllMovies(page).map { it.toUiState() }
 }

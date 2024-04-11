@@ -27,9 +27,7 @@ class SearchMovieRepositoryImpl @Inject constructor(
 ) : SearchMovieRepository {
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override fun searchMovie(
-        movieName: String,
-    ): Flow<RequestResult<List<Movie>>> {
+    override fun searchMovie(movieName: String): Flow<RequestResult<List<Movie>>> {
 
         return searchFromServer(movieName)
             .flatMapConcat { result ->
@@ -43,7 +41,7 @@ class SearchMovieRepositoryImpl @Inject constructor(
 
     private fun searchFromServer(movieName: String): Flow<RequestResult<List<Movie>>> {
         val apiRequest: Flow<RequestResult<MovieListResponse>> =
-            flow { emit(api.searchMovie(movieName)) }
+            flow { emit(api.searchMovie(searchName = movieName)) }
                 .map { result -> result.toRequestResult() }
 
         val start = flowOf<RequestResult<MovieListResponse>>(RequestResult.InProgress())

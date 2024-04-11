@@ -3,6 +3,7 @@ package com.kostyarazboynik.movielist.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kostyarazboynik.dagger.FeatureScope
+import com.kostyarazboynik.domain.connection.ConnectivityObserver
 import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.domain.usecase.GetAllLocalMoviesUseCase
@@ -23,7 +24,9 @@ import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @FeatureScope
@@ -31,30 +34,61 @@ class MoviesListFragmentViewModel @Inject constructor(
     private val getAllMoviesUseCase: GetAllMoviesUseCase,
     private val searchMovieUseCase: SearchMovieUseCase,
     private val getAllLocalMoviesUseCase: GetAllLocalMoviesUseCase,
+    private val connectivityObserver: ConnectivityObserver,
 ) : ViewModel() {
 
     private val _uiStateFlow: MutableStateFlow<UiState<List<Movie>>> =
         MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState<List<Movie>>> = _uiStateFlow
+    private val internetStatus =
+        MutableStateFlow(ConnectivityObserver.Status.Available)
+
+    private var alreadyLoadedLocalData = false
+
+    init {
+        observeNetwork()
+    }
+
+    private fun observeNetwork() =
+        viewModelScope.launch(Dispatchers.IO) {
+            connectivityObserver.observe().collectLatest {
+                internetStatus.emit(it)
+            }
+        }
 
     fun loadAllData() {
-        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
-            _uiStateFlow.emitAll(getAllMoviesUseCase())
+        if (internetStatus.value == ConnectivityObserver.Status.Available) {
+            loadAllDataForced()
+        } else {
+            loadLocalData()
         }
     }
 
     fun loadLocalData() {
         viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
-            _uiStateFlow.emitAll(getAllLocalMoviesUseCase())
+            val data = getAllLocalMoviesUseCase()
+            data.collectLatest {
+                if (getUiStateDataSize(it) > 0) {
+                    _uiStateFlow.emitAll(data)
+                } else {
+                    loadAllDataForced()
+                }
+            }
         }
+    }
+
+    fun loadAllDataForced() {
+        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
+            _uiStateFlow.emitAll(getAllMoviesUseCase(countPage()))
+        }
+        alreadyLoadedLocalData = false
     }
 
     fun searchMovie(movieName: String) {
         viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
-            searchMovieUseCase(movieName).collect {
-                _uiStateFlow.emitAll(searchMovieUseCase(movieName))
-            }
+            _uiStateFlow.emitAll(searchMovieUseCase(movieName))
         }
+        alreadyLoadedLocalData = false
     }
 
     fun getOption(item: String): List<String> {
@@ -85,7 +119,26 @@ class MoviesListFragmentViewModel @Inject constructor(
         }
     }
 
+    private fun getUiStateDataSize(uiState: UiState<List<Movie>>): Int {
+        return when (uiState) {
+            UiState.Initial -> 0
+            is UiState.Loading -> uiState.data?.size ?: 0
+            is UiState.Success -> uiState.data.size
+            is UiState.Error -> uiState.data?.size ?: 0
+        }
+    }
+
+    private fun countPage(): Int {
+        return when (val uiState = _uiStateFlow.value) {
+            UiState.Initial -> 0
+            is UiState.Loading -> (uiState.data?.size ?: 0) / PAGE_SIZE
+            is UiState.Success -> uiState.data.size / PAGE_SIZE
+            is UiState.Error -> (uiState.data?.size ?: 0) / PAGE_SIZE
+        } + 1
+    }
+
     companion object {
+        private const val PAGE_SIZE = 20
         private const val TAG = "MoviesListFragmentViewModel"
     }
 }

@@ -2,14 +2,14 @@ package com.kostyarazboynik.kinopoisksearch.dagger
 
 import android.app.Application
 import android.content.Context
-import com.kostyarazboynik.kinopoisksearch.dagger.module.BuildTypeModule
 import com.kostyarazboynik.kinopoisksearch.MainActivity
 import com.kostyarazboynik.kinopoisksearch.MoviesApp
+import com.kostyarazboynik.kinopoisksearch.dagger.module.BuildTypeModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.DatabaseModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.MoviesApiModule
+import com.kostyarazboynik.kinopoisksearch.dagger.module.NetworkModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.RepositoryModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.UseCasesModule
-import com.kostyarazboynik.kinopoisksearch.ui.dagger.UIComponent
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponent
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiModule
 import dagger.BindsInstance
@@ -22,10 +22,11 @@ import javax.inject.Singleton
     modules = [
         BuildTypeModule::class,
         DatabaseModule::class,
+        FeatureMovieListUiModule::class,
         MoviesApiModule::class,
+        NetworkModule::class,
         RepositoryModule::class,
         UseCasesModule::class,
-        FeatureMovieListUiModule::class,
     ]
 )
 interface AppComponent {
@@ -33,8 +34,6 @@ interface AppComponent {
     fun inject(app: MoviesApp)
 
     fun inject(activity: MainActivity)
-
-    fun createUIComponent(): UIComponent.Builder
 
     fun featureMovieListUiComponent(): FeatureMovieListUiComponent.Factory
 

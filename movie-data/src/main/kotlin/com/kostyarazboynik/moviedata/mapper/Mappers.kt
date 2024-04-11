@@ -83,6 +83,25 @@ internal fun MovieDto.toMovieDbo(): MovieDbo =
         movieLength = this.movieLength,
     )
 
+internal fun Movie.toMovieDbo(): MovieDbo =
+    MovieDbo(
+        id = this.id,
+        name = this.name,
+        description = this.description,
+        shortDescription = this.shortDescription,
+        poster = MoviePosterDbo(
+            url = this.poster?.url,
+            previewUrl = this.poster?.previewUrl,
+        ),
+        rating = MovieRatingDbo(kp = this.rating?.kp),
+        ageRating = this.ageRating,
+        year = this.year,
+        genres = this.genres?.map { MovieGenreDbo(name = it.name) },
+        countries = this.countries?.map { MovieCountryDbo(name = it.name) },
+        isSeries = this.isSeries,
+        movieLength = this.movieLength,
+    )
+
 internal fun MovieDto.toMovie(): Movie =
     Movie(
         id = this.id,

@@ -2,13 +2,13 @@ package com.kostyarazboynik.kinopoisksearch
 
 import android.app.Application
 import android.os.SystemClock
-import com.kostyarazboynik.utils.Logger
-import com.kostyarazboynik.utils.timer.StartTimeHolder
 import com.kostyarazboynik.kinopoisksearch.dagger.AppComponent
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponent
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
+import com.kostyarazboynik.utils.Logger
+import com.kostyarazboynik.utils.timer.StartTimeHolder
 
-class MoviesApp: Application(), FeatureMovieListUiComponentProvider {
+class MoviesApp : Application(), FeatureMovieListUiComponentProvider {
 
     private var isInitialized = false
 
