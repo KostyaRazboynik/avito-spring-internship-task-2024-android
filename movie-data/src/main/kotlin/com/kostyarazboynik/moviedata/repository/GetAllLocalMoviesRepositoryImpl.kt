@@ -21,14 +21,9 @@ class GetAllLocalMoviesRepositoryImpl @Inject constructor(
     override fun getAllLocalMovies(): Flow<RequestResult<List<Movie>>> = getAllFromDataBase()
 
     private fun getAllFromDataBase(): Flow<RequestResult<List<Movie>>> {
-        val dbRequest: Flow<RequestResult<List<MovieDbo>>> =
-            database.moviesDbo::getAllMovies.asFlow()
+        return database.moviesDbo::getAllMovies.asFlow()
                 .map { RequestResult.Success(it) }
-
-        val start = flowOf<RequestResult<List<MovieDbo>>>(RequestResult.InProgress())
-
-        return merge(dbRequest, start)
-            .map { result -> result.map { movieDbos -> movieDbos.map { it.toMovie() } } }
+                .map { result -> result.map { movieDbos -> movieDbos.map { it.toMovie() } } }
     }
 
     private companion object {

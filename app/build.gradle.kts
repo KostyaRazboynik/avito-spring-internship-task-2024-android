@@ -48,6 +48,7 @@ dependencies {
     implementation(project(":core:dagger"))
     implementation(project(":core:utils"))
     implementation(project(":domain"))
+    implementation(project(":features:feature-movie-details"))
     implementation(project(":features:feature-movie-list"))
     implementation(project(":movie-api"))
     implementation(project(":movie-data"))

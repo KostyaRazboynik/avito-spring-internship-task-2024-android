@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/core/utils" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/feature-movie-details" />
             <option value="$PROJECT_DIR$/features/feature-movie-list" />
             <option value="$PROJECT_DIR$/movie-api" />
             <option value="$PROJECT_DIR$/movie-data" />

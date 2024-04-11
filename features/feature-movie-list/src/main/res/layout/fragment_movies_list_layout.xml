@@ -23,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filterOptionsContainer"
+            android:id="@+id/filterTypeContainer"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/filterOptions"
+                android:id="@+id/filterType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:cursorVisible="false"
@@ -45,18 +45,18 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filterOptionTypesContainer"
+            android:id="@+id/filterOptionContainer"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_top_margin_small"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/filterOptionsContainer"
-            app:layout_constraintTop_toBottomOf="@id/filterOptionsContainer">
+            app:layout_constraintStart_toStartOf="@id/filterTypeContainer"
+            app:layout_constraintTop_toBottomOf="@id/filterTypeContainer">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/filterOptionTypes"
+                android:id="@+id/filterOption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:cursorVisible="false"
@@ -75,7 +75,7 @@
             android:importantForAutofill="no"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/filterOptionTypesContainer" />
+            app:layout_constraintTop_toBottomOf="@id/filterOptionContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

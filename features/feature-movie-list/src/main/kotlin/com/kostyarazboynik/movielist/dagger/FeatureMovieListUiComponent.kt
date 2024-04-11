@@ -1,7 +1,7 @@
 package com.kostyarazboynik.movielist.dagger
 
 import com.kostyarazboynik.dagger.FeatureScope
-import com.kostyarazboynik.movielist.ui.MoviesListFragmentViewModel
+import com.kostyarazboynik.movielist.ui.MovieListFragmentViewModel
 import dagger.Subcomponent
 
 /**
@@ -16,7 +16,7 @@ interface FeatureMovieListUiComponent {
         fun create(): FeatureMovieListUiComponent
     }
 
-    fun getViewModel(): MoviesListFragmentViewModel
+    fun getViewModel(): MovieListFragmentViewModel
 }
 
 interface FeatureMovieListUiComponentProvider {

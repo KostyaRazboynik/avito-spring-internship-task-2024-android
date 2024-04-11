@@ -8,7 +8,8 @@ import com.kostyarazboynik.feature_movie_list.databinding.MovieListItemLayoutBin
 import com.kostyarazboynik.movielist.ui.list_adapter.diffutil.MoviesListDiffUtilCallback
 
 class MoviesListAdapter(
-    private val loadNewCompaniesCallBack: () -> Unit,
+    private val loadNewMoviesCallBack: () -> Unit,
+    private val onMovieClickListener: (movie: Movie) -> Unit,
 ) : ListAdapter<Movie, MoviesListViewHolder>(MoviesListDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesListViewHolder =
@@ -21,9 +22,15 @@ class MoviesListAdapter(
         )
 
     override fun onBindViewHolder(holder: MoviesListViewHolder, position: Int) {
-        holder.bind(getItem(position))
-        if (position == itemCount - 1 && currentList.size > 10 || currentList.size == 0) {
-            loadNewCompaniesCallBack()
+        val movie = getItem(position)
+        holder.apply {
+            bind(movie)
+            itemView.setOnClickListener {
+                onMovieClickListener(movie)
+            }
+        }
+        if (position == itemCount - 1) {
+            loadNewMoviesCallBack()
         }
     }
 

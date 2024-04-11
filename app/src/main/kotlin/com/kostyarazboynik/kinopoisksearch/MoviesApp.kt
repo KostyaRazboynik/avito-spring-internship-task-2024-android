@@ -3,12 +3,16 @@ package com.kostyarazboynik.kinopoisksearch
 import android.app.Application
 import android.os.SystemClock
 import com.kostyarazboynik.kinopoisksearch.dagger.AppComponent
+import com.kostyarazboynik.moviedetails.dagger.FeatureMovieDetailsUiComponent
+import com.kostyarazboynik.moviedetails.dagger.FeatureMovieDetailsUiComponentProvider
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponent
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
 import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.timer.StartTimeHolder
 
-class MoviesApp : Application(), FeatureMovieListUiComponentProvider {
+class MoviesApp : Application(),
+    FeatureMovieDetailsUiComponentProvider,
+    FeatureMovieListUiComponentProvider {
 
     private var isInitialized = false
 
@@ -33,12 +37,15 @@ class MoviesApp : Application(), FeatureMovieListUiComponentProvider {
         AppComponent.component.inject(this)
     }
 
+    override fun provideFeatureMovieListUiComponent(): FeatureMovieListUiComponent =
+        AppComponent.component.featureMovieListUiComponent().create()
+
+    override fun provideFeatureMovieDetailsUiComponent(): FeatureMovieDetailsUiComponent =
+        AppComponent.component.featureMovieDetailsUiComponent().create()
+
     companion object {
         private const val TAG = "MoviesApp"
         var appStartTime = 0L
             private set
     }
-
-    override fun provideFeatureMovieListUiComponent(): FeatureMovieListUiComponent =
-        AppComponent.component.featureMovieListUiComponent().create()
 }

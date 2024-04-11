@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.kostyarazboynik.feature_movie_list"
+    namespace = "com.kostyarazboynik.feature_movie_details"
     compileSdk = 34
 
     defaultConfig {
@@ -27,7 +27,6 @@ dependencies {
     implementation(project(":core:dagger"))
     implementation(project(":core:utils"))
     implementation(project(":domain"))
-    implementation(project(":features:feature-movie-details"))
 
     implementation(libs.material)
     implementation(libs.androidx.appcompat)

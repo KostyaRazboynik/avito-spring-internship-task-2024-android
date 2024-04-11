@@ -20,17 +20,19 @@ import com.kostyarazboynik.movielist.ui.utils.getMoviesByGenre
 import com.kostyarazboynik.movielist.ui.utils.getMoviesByRating
 import com.kostyarazboynik.movielist.ui.utils.getMoviesByYear
 import com.kostyarazboynik.movielist.ui.utils.getYears
+import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @FeatureScope
-class MoviesListFragmentViewModel @Inject constructor(
+class MovieListFragmentViewModel @Inject constructor(
     private val getAllMoviesUseCase: GetAllMoviesUseCase,
     private val searchMovieUseCase: SearchMovieUseCase,
     private val getAllLocalMoviesUseCase: GetAllLocalMoviesUseCase,
@@ -40,17 +42,19 @@ class MoviesListFragmentViewModel @Inject constructor(
     private val _uiStateFlow: MutableStateFlow<UiState<List<Movie>>> =
         MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState<List<Movie>>> = _uiStateFlow
+
     private val internetStatus =
         MutableStateFlow(ConnectivityObserver.Status.Available)
 
-    private var alreadyLoadedLocalData = false
+    private val _filterTypeStateFlow = MutableStateFlow(Constants.NONE)
+    val filterTypeStateFlow: StateFlow<String> = _filterTypeStateFlow
 
     init {
         observeNetwork()
     }
 
     private fun observeNetwork() =
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launchNamed("$TAG-viewModelScope-observeNetwork",Dispatchers.IO) {
             connectivityObserver.observe().collectLatest {
                 internetStatus.emit(it)
             }
@@ -65,7 +69,7 @@ class MoviesListFragmentViewModel @Inject constructor(
     }
 
     fun loadLocalData() {
-        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
+        viewModelScope.launchNamed("$TAG-viewModelScope-loadLocalData", Dispatchers.IO) {
             val data = getAllLocalMoviesUseCase()
             data.collectLatest {
                 if (getUiStateDataSize(it) > 0) {
@@ -77,18 +81,16 @@ class MoviesListFragmentViewModel @Inject constructor(
         }
     }
 
-    fun loadAllDataForced() {
-        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
+    private fun loadAllDataForced() {
+        viewModelScope.launchNamed("$TAG-viewModelScope-loadAllDataForced", Dispatchers.IO) {
             _uiStateFlow.emitAll(getAllMoviesUseCase(countPage()))
         }
-        alreadyLoadedLocalData = false
     }
 
     fun searchMovie(movieName: String) {
-        viewModelScope.launchNamed("$TAG-viewModelScope-loadData", Dispatchers.IO) {
+        viewModelScope.launchNamed("$TAG-viewModelScope-searchMovie", Dispatchers.IO) {
             _uiStateFlow.emitAll(searchMovieUseCase(movieName))
         }
-        alreadyLoadedLocalData = false
     }
 
     fun getOption(item: String): List<String> {
@@ -116,6 +118,12 @@ class MoviesListFragmentViewModel @Inject constructor(
             Constants.YEAR -> getMoviesByYear(movies, optionType)
             Constants.GENRE -> getMoviesByGenre(movies, optionType)
             else -> error("Unreachable brunch")
+        }
+    }
+
+    fun setUpFilterType(type: String) {
+        viewModelScope.launchNamed("$TAG-viewModelScope-setUpFilterType") {
+            _filterTypeStateFlow.emit(type)
         }
     }
 

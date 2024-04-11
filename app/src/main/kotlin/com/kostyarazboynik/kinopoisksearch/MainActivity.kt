@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.kostyarazboynik.kinopoisksearch.dagger.AppComponent
 import com.kostyarazboynik.kinopoisksearch.databinding.ActivityMainBinding
-import com.kostyarazboynik.movielist.ui.MoviesListFragment
+import com.kostyarazboynik.movielist.ui.MovieListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val binding = ActivityMainBinding.inflate(layoutInflater)
 
-        val fragment = MoviesListFragment.newInstance()
+        val fragment = MovieListFragment.newInstance(binding.frameContent.id)
 
         createFragment(binding, fragment)
     }

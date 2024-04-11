@@ -16,11 +16,14 @@ import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.feature_movie_list.R
 import com.kostyarazboynik.feature_movie_list.databinding.FragmentMoviesListLayoutBinding
+import com.kostyarazboynik.moviedetails.ui.MovieDetailsFragment
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
 import com.kostyarazboynik.movielist.ui.list_adapter.MoviesListAdapter
 import com.kostyarazboynik.movielist.ui.utils.Constants
 import com.kostyarazboynik.movielist.ui.utils.textChanges
+import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
@@ -28,9 +31,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class MoviesListFragment : Fragment() {
+class MovieListFragment : Fragment() {
 
-    private val viewModel: MoviesListFragmentViewModel by lazy {
+    private val viewModel: MovieListFragmentViewModel by lazy {
         (context?.applicationContext as FeatureMovieListUiComponentProvider)
             .provideFeatureMovieListUiComponent().getViewModel()
     }
@@ -48,7 +51,7 @@ class MoviesListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadAllData()
+        viewModel.loadLocalData()
         setUpFilterOptions()
         setUpSearchField()
         setUpSwipeRefreshListener()
@@ -58,7 +61,17 @@ class MoviesListFragment : Fragment() {
 
     private fun setUpFilterOptions() {
         binding.apply {
-            filterOptions.apply {
+            filterType.apply {
+                viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-collect-filterType") {
+                    viewModel.filterTypeStateFlow.collectLatest { filterType ->
+                        if (filterType == Constants.NONE) {
+                            filterOptionContainer.isVisible = false
+                        } else {
+                            filterOptionContainer.isVisible = true
+                            setUpFilterOptionType(filterType)
+                        }
+                    }
+                }
                 setAdapter(
                     ArrayAdapter(
                         context,
@@ -68,12 +81,8 @@ class MoviesListFragment : Fragment() {
                 )
                 setOnItemClickListener { parent, _, position, _ ->
                     val item = parent.getItemAtPosition(position).toString().lowercase()
-                    if (item == Constants.NONE) {
-                        updateUI()
-                        filterOptionTypesContainer.isVisible = false
-                    } else {
-                        setUpFilterOptionTypes(item)
-                    }
+                    viewModel.setUpFilterType(item)
+                    updateUI()
                 }
             }
         }
@@ -97,8 +106,8 @@ class MoviesListFragment : Fragment() {
         binding.apply {
             swipeRefreshLayout.apply {
                 setOnRefreshListener {
-                    filterOptionTypesContainer.isVisible = false
-                    filterOptions.text.clear()
+                    filterOptionContainer.isVisible = false
+                    filterType.text.clear()
                     searchMovie.text.clear()
                     viewModel.loadLocalData()
                     isRefreshing = false
@@ -107,9 +116,9 @@ class MoviesListFragment : Fragment() {
         }
     }
 
-    private fun setUpFilterOptionTypes(item: String) {
+    private fun setUpFilterOptionType(item: String) {
         binding.apply {
-            filterOptionTypes.apply {
+            filterOption.apply {
                 text.clear()
                 setAdapter(
                     ArrayAdapter(
@@ -118,29 +127,24 @@ class MoviesListFragment : Fragment() {
                         viewModel.getOption(item)
                     )
                 )
-                setOnItemClickListener { _, _, _, _ ->
-                    updateUI()
-                }
             }
-            filterOptionTypesContainer.apply {
-                isVisible = true
-                hint = context.getString(R.string.select_option, item)
-            }
+            filterOptionContainer.hint = context?.getString(R.string.select_option, item)
         }
     }
 
     private fun setCurrentFilters(movies: List<Movie>) {
         binding.apply {
             listAdapter.submitList(
-                if (filterOptions.text.toString().lowercase() == Constants.NONE ||
-                    filterOptions.text.toString().isEmpty() ||
-                    filterOptionTypes.text.toString().isEmpty()
+                if (filterType.text.toString().lowercase() == Constants.NONE ||
+                    filterType.text.toString().isEmpty() ||
+                    filterOption.text.toString().isEmpty()
                 ) {
                     movies
                 } else {
+                    filterOptionContainer.isVisible = true
                     viewModel.filterMovies(
-                        filterOptions.text.toString().lowercase(),
-                        filterOptionTypes.text.toString(),
+                        filterType.text.toString().lowercase(),
+                        filterOption.text.toString(),
                         movies
                     )
                 }
@@ -152,19 +156,34 @@ class MoviesListFragment : Fragment() {
         binding.apply {
             recyclerView.apply {
                 adapter = MoviesListAdapter(
-                    loadNewCompaniesCallBack = {
+                    loadNewMoviesCallBack = {
                         if (searchMovie.text.isEmpty()) {
-                            viewModel.loadAllDataForced()
+                            viewModel.loadAllData()
                         }
-                    }
+                    },
+                    onMovieClickListener = { movie ->
+                        navigateToMovieDetailsFragment(movie)
+                    },
                 )
                 layoutManager = GridLayoutManager(context, 2)
             }
         }
     }
 
+    private fun navigateToMovieDetailsFragment(movie: Movie) {
+        activity?.supportFragmentManager?.let { manager ->
+            arguments?.getInt(FRAME_CONTENT_ID)?.let { id ->
+                val transaction = manager.beginTransaction()
+                val fragment = MovieDetailsFragment.newInstance(movie)
+                transaction.replace(id, fragment)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            }
+        }
+    }
+
     private fun updateUI() {
-        viewModel.viewModelScope.launch {
+        viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-updateUI") {
             viewModel.uiStateFlow.collect { uiState ->
                 updateUIState(uiState)
             }
@@ -187,6 +206,14 @@ class MoviesListFragment : Fragment() {
     companion object {
         private const val TAG = "MoviesListFragment"
 
-        fun newInstance() = MoviesListFragment()
+        private const val FRAME_CONTENT_ID = "frame_content_id"
+
+        fun newInstance(
+            frameContentId: Int,
+        ) = MovieListFragment().apply {
+            arguments = Bundle().apply {
+                putInt(FRAME_CONTENT_ID, frameContentId)
+            }
+        }
     }
 }

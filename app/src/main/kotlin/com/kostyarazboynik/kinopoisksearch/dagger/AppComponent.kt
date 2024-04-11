@@ -10,6 +10,8 @@ import com.kostyarazboynik.kinopoisksearch.dagger.module.MoviesApiModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.NetworkModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.RepositoryModule
 import com.kostyarazboynik.kinopoisksearch.dagger.module.UseCasesModule
+import com.kostyarazboynik.moviedetails.dagger.FeatureMovieDetailsUiComponent
+import com.kostyarazboynik.moviedetails.dagger.FeatureMovieDetailsUiModule
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponent
 import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiModule
 import dagger.BindsInstance
@@ -22,6 +24,7 @@ import javax.inject.Singleton
     modules = [
         BuildTypeModule::class,
         DatabaseModule::class,
+        FeatureMovieDetailsUiModule::class,
         FeatureMovieListUiModule::class,
         MoviesApiModule::class,
         NetworkModule::class,
@@ -34,6 +37,8 @@ interface AppComponent {
     fun inject(app: MoviesApp)
 
     fun inject(activity: MainActivity)
+
+    fun featureMovieDetailsUiComponent(): FeatureMovieDetailsUiComponent.Factory
 
     fun featureMovieListUiComponent(): FeatureMovieListUiComponent.Factory
 
