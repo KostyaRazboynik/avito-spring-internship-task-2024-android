@@ -6,8 +6,11 @@ import com.kostyarazboynik.domain.model.movie.MovieGenre
 import com.kostyarazboynik.domain.model.movie.MoviePerson
 import com.kostyarazboynik.domain.model.movie.MoviePoster
 import com.kostyarazboynik.domain.model.movie.MovieRating
+import com.kostyarazboynik.domain.model.movie.MovieReview
 import com.kostyarazboynik.kinopoiskapi.model.dto.MovieDetailedDto
 import com.kostyarazboynik.kinopoiskapi.model.dto.MovieDto
+import com.kostyarazboynik.kinopoiskapi.model.dto.MoviePosterDto
+import com.kostyarazboynik.kinopoiskapi.model.dto.MovieReviewDto
 import com.kostyarazboynik.moviedatabase.model.MovieCountryDbo
 import com.kostyarazboynik.moviedatabase.model.MovieDbo
 import com.kostyarazboynik.moviedatabase.model.MovieGenreDbo
@@ -121,3 +124,20 @@ internal fun MovieDto.toMovie(): Movie =
         isSeries = this.isSeries,
         movieLength = this.movieLength,
     )
+
+internal fun MoviePosterDto.toMoviePoster(): MoviePoster =
+    MoviePoster(
+        url = this.url,
+        previewUrl = this.previewUrl,
+    )
+
+internal fun MovieReviewDto.toMovieReview(): MovieReview =
+    MovieReview(
+        id = this.id,
+        movieId = this.movieId,
+        author = this.author,
+        title = this.title,
+        review = this.review,
+        type = this.type,
+    )
+

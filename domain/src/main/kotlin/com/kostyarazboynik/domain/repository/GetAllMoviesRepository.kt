@@ -6,6 +6,7 @@ import com.kostyarazboynik.domain.model.movie.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface GetAllMoviesRepository {
+
     fun getAllMovies(
         page: Int,
         mergeStrategy: MergeStrategy<RequestResult<List<Movie>>>? = null,

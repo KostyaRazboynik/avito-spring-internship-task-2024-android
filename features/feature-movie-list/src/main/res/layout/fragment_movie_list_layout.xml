@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/appTitle"
-            style="@style/MoviesText.30"
+            style="@style/MovieText.30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_top_margin"
@@ -67,7 +67,7 @@
 
         <EditText
             android:id="@+id/searchMovie"
-            style="@style/MoviesText.20"
+            style="@style/MovieText.20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/list_top_margin_small"

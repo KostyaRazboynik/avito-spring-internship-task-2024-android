@@ -5,15 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.feature_movie_list.databinding.MovieListItemLayoutBinding
-import com.kostyarazboynik.movielist.ui.list_adapter.diffutil.MoviesListDiffUtilCallback
+import com.kostyarazboynik.movielist.ui.list_adapter.diffutil.MovieListDiffUtilCallback
 
-class MoviesListAdapter(
+class MovieListAdapter(
     private val loadNewMoviesCallBack: () -> Unit,
     private val onMovieClickListener: (movie: Movie) -> Unit,
-) : ListAdapter<Movie, MoviesListViewHolder>(MoviesListDiffUtilCallback()) {
+) : ListAdapter<Movie, MovieListViewHolder>(MovieListDiffUtilCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesListViewHolder =
-        MoviesListViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder =
+        MovieListViewHolder(
             MovieListItemLayoutBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -21,7 +21,7 @@ class MoviesListAdapter(
             ),
         )
 
-    override fun onBindViewHolder(holder: MoviesListViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
         val movie = getItem(position)
         holder.apply {
             bind(movie)

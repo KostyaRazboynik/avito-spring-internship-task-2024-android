@@ -9,17 +9,17 @@ import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.domain.usecase.GetAllLocalMoviesUseCase
 import com.kostyarazboynik.domain.usecase.GetAllMoviesUseCase
 import com.kostyarazboynik.domain.usecase.SearchMovieUseCase
-import com.kostyarazboynik.movielist.ui.utils.Constants
-import com.kostyarazboynik.movielist.ui.utils.getAgeRatings
-import com.kostyarazboynik.movielist.ui.utils.getCountries
-import com.kostyarazboynik.movielist.ui.utils.getGenres
-import com.kostyarazboynik.movielist.ui.utils.getMoviesByAgeRating
-import com.kostyarazboynik.movielist.ui.utils.getMoviesByContentType
-import com.kostyarazboynik.movielist.ui.utils.getMoviesByCountry
-import com.kostyarazboynik.movielist.ui.utils.getMoviesByGenre
-import com.kostyarazboynik.movielist.ui.utils.getMoviesByRating
-import com.kostyarazboynik.movielist.ui.utils.getMoviesByYear
-import com.kostyarazboynik.movielist.ui.utils.getYears
+import com.kostyarazboynik.movielist.utils.Constants
+import com.kostyarazboynik.movielist.utils.getAgeRatings
+import com.kostyarazboynik.movielist.utils.getCountries
+import com.kostyarazboynik.movielist.utils.getGenres
+import com.kostyarazboynik.movielist.utils.getMoviesByAgeRating
+import com.kostyarazboynik.movielist.utils.getMoviesByContentType
+import com.kostyarazboynik.movielist.utils.getMoviesByCountry
+import com.kostyarazboynik.movielist.utils.getMoviesByGenre
+import com.kostyarazboynik.movielist.utils.getMoviesByRating
+import com.kostyarazboynik.movielist.utils.getMoviesByYear
+import com.kostyarazboynik.movielist.utils.getYears
 import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.Dispatchers
@@ -55,7 +55,7 @@ class MovieListFragmentViewModel @Inject constructor(
 
     private fun observeNetwork() =
         viewModelScope.launchNamed("$TAG-viewModelScope-observeNetwork",Dispatchers.IO) {
-            connectivityObserver.observe().collectLatest {
+            connectivityObserver.observe().collect {
                 internetStatus.emit(it)
             }
         }

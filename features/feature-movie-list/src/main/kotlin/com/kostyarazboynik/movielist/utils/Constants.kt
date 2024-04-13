@@ -1,4 +1,4 @@
-package com.kostyarazboynik.movielist.ui.utils
+package com.kostyarazboynik.movielist.utils
 
 internal object Constants {
     const val SERIAL = "serial"

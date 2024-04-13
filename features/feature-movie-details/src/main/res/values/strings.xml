@@ -1,17 +1,6 @@
 <resources>
-    <string name="app_title">Films</string>
-    <string name="filter_by">Filter by:</string>
-    <string name="select_filtering_option">select filtering option</string>
-    <string name="select_option">select %1$s</string>
-    <string name="search_movie">search movie</string>
-
-    <string-array name="filtering_options">
-        <item>Year</item>
-        <item>Genre</item>
-        <item>Country</item>
-        <item>Content Type</item>
-        <item>Rating</item>
-        <item>Age rating</item>
-        <item>None</item>
-    </string-array>
+    <string name="movie_year_genres_countries_length">%s, %s\n%s, %s h %d min</string>
+    <string name="movie_actors">Actors</string>
+    <string name="movie_posters">Posters</string>
+    <string name="movie_review">Review</string>
 </resources>

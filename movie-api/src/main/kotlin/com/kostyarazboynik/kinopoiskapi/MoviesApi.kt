@@ -2,6 +2,7 @@ package com.kostyarazboynik.kinopoiskapi
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.kostyarazboynik.kinopoiskapi.model.dto.MovieDetailedDto
+import com.kostyarazboynik.kinopoiskapi.model.response.PosterListResponse
 import com.kostyarazboynik.kinopoiskapi.model.response.MovieListResponse
 import com.kostyarazboynik.kinopoiskapi.model.response.ReviewListResponse
 import com.kostyarazboynik.kinopoiskapi.utils.MoviesApiKeyInterceptor
@@ -44,29 +45,17 @@ interface MoviesApi {
 
     @GET("/v1.4/review")
     suspend fun loadMovieReviews(
-        @Query("movieId") movieId: Int,
         @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 5,
-        @Query("sortField") sortField: String = "reviewLikes",
-        @Query("sortType") sortType: Int = -1,
-    ): Result<ReviewListResponse>
-
-    @GET("/v1.4/review")
-    suspend fun loadMovieReviewTyped(
+        @Query("limit") limit: Int = 20,
         @Query("movieId") movieId: Int,
-        @Query("search") searchType: String,
-        @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 5,
-        @Query("sortField") sortField: String = "reviewLikes",
-        @Query("sortType") sortType: Int = -1,
     ): Result<ReviewListResponse>
 
     @GET("/v1.4/image")
-    suspend fun loadMovieImage(
+    suspend fun loadMoviePosters(
         @Query("movieId") movieId: Int,
         @Query("page") page: Int = 1,
-        @Query("limit") limit: Int = 30,
-    ): Result<ReviewListResponse>
+        @Query("limit") limit: Int = 20,
+    ): Result<PosterListResponse>
 }
 
 fun MoviesApi(

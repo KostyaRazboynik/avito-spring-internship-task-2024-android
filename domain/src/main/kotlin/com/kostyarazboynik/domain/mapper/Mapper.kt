@@ -4,7 +4,7 @@ import com.kostyarazboynik.domain.model.RequestResult
 import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie
 
-internal fun RequestResult<List<Movie>>.toUiState(): UiState<List<Movie>> {
+internal fun <T : Any> RequestResult<T>.toUiState(): UiState<T> {
     return when (this) {
         is RequestResult.Success -> UiState.Success(data)
         is RequestResult.InProgress -> UiState.Loading(data)

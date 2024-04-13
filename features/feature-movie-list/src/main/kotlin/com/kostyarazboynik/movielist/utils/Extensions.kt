@@ -1,4 +1,4 @@
-package com.kostyarazboynik.movielist.ui.utils
+package com.kostyarazboynik.movielist.utils
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
 
-fun EditText.textChanges(): Flow<CharSequence?> {
+internal fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow<CharSequence?> {
         val listener = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) = Unit

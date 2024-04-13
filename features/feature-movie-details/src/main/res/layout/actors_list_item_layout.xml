@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/actors_list_item_height"
+    app:cardCornerRadius="@dimen/actors_list_item_corner_radius"
+    app:cardUseCompatPadding="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/actors_list_item_width"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/actorPhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/actors_list_item_image_height"
+            android:adjustViewBounds="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ActorPreview" />
+
+        <TextView
+            android:id="@+id/actorName"
+            style="@style/MovieText.20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/actors_list_item_text_margin_start"
+            android:layout_marginEnd="@dimen/actors_list_item_text_margin_end"
+            android:layout_marginBottom="@dimen/actors_list_item_text_margin_bottom"
+            app:layout_constraintBottom_toTopOf="@id/actorDescription"
+            app:layout_constraintStart_toEndOf="@id/actorPhoto"
+            app:layout_constraintTop_toTopOf="@id/actorPhoto"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/actorDescription"
+            style="@style/MovieText.Transparent.16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/actors_list_item_text_margin_start"
+            android:layout_marginEnd="@dimen/actors_list_item_text_margin_end"
+            app:layout_constraintBottom_toBottomOf="@id/actorPhoto"
+            app:layout_constraintStart_toEndOf="@id/actorPhoto"
+            app:layout_constraintTop_toBottomOf="@id/actorName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ImageListResponse(
-    @SerialName("docs") val imageList: List<MoviePosterDto>,
+data class PosterListResponse(
+    @SerialName("docs") val postersList: List<MoviePosterDto>,
     @SerialName("total") val total: Int,
 )

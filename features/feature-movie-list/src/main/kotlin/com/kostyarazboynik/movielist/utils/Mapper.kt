@@ -1,4 +1,4 @@
-package com.kostyarazboynik.movielist.ui.utils
+package com.kostyarazboynik.movielist.utils
 
 import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie

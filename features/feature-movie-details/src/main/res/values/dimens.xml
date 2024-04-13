@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_30">30sp</dimen>
+    <dimen name="text_26">26sp</dimen>
     <dimen name="text_20">20sp</dimen>
-    <dimen name="test_16">16sp</dimen>
+    <dimen name="text_16">16sp</dimen>
+    <dimen name="text_14">16sp</dimen>
 
-    <dimen name="list_horizontal_padding">16dp</dimen>
-    <dimen name="list_top_margin">8dp</dimen>
-    <dimen name="list_start_margin">15dp</dimen>
-    <dimen name="list_top_margin_small">5dp</dimen>
+    <dimen name="movie_details_margin_big">16dp</dimen>
+    <dimen name="movie_details_margin_medium">8dp</dimen>
+    <dimen name="movie_details_info_margin_top">4dp</dimen>
+    <dimen name="movie_details_rv_height">60dp</dimen>
 
-    <dimen name="list_item_min_height">225dp</dimen>
-    <dimen name="list_item_corner_radius">16dp</dimen>
-    <dimen name="list_item_margin">8dp</dimen>
+    <dimen name="actors_list_item_corner_radius">4dp</dimen>
+    <dimen name="actors_list_item_height">88dp</dimen>
+    <dimen name="actors_list_item_width">240dp</dimen>
+    <dimen name="actors_list_item_image_height">80dp</dimen>
+    <dimen name="actors_list_item_text_margin_start">12dp</dimen>
+    <dimen name="actors_list_item_text_margin_end">8dp</dimen>
+    <dimen name="actors_list_item_text_margin_bottom">4dp</dimen>
+    <dimen name="poster_list_item_height">200dp</dimen>
+    <dimen name="poster_list_item_corner_radius">8dp</dimen>
+
+    <dimen name="review_list_item_width">300dp</dimen>
+    <dimen name="review_list_item_height">240dp</dimen>
+    <dimen name="review_list_item_padding_horizontal">40dp</dimen>
+    <dimen name="review_list_item_padding_vertical">10dp</dimen>
+    <dimen name="review_list_item_corner_radius">4dp</dimen>
+    <dimen name="review_list_item_rating_corner_radius">2dp</dimen>
+    <dimen name="review_list_item_rating_width">4dp</dimen>
+    <dimen name="review_list_item_rating_height">40dp</dimen>
+    <dimen name="review_list_item_rating_margin_top">20dp</dimen>
+    <dimen name="review_list_item_review_margin_top">8dp</dimen>
+    <dimen name="review_list_item_review_title_margin_top">16dp</dimen>
+
 </resources>

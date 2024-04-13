@@ -1,21 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="MoviesText">
+    <style name="MovieText">
         <item name="fontFamily">@font/segoe</item>
         <item name="android:textColor">@color/highlight_text_color</item>
-        <item name="android:gravity">start</item>
+        <item name="android:gravity">center</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
     </style>
 
-    <style name="MoviesText.30">
-        <item name="android:textSize">@dimen/text_30</item>
+    <style name="MovieText.Bold">
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="MoviesText.20">
+    <style name="MovieText.Transparent">
+        <item name="android:textColor">@color/transparent_text_color</item>
+    </style>
+
+    <style name="MovieText.Transparent.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MovieText.Transparent.Bold.20">
         <item name="android:textSize">@dimen/text_20</item>
     </style>
 
-    <style name="MoviesText.16">
-        <item name="android:textSize">@dimen/test_16</item>
+    <style name="MovieText.Transparent.Bold.16">
+        <item name="android:textSize">@dimen/text_16</item>
+    </style>
+
+    <style name="MovieText.Transparent.16">
+        <item name="android:textSize">@dimen/text_16</item>
+    </style>
+
+    <style name="MovieText.Transparent.14">
+        <item name="android:textSize">@dimen/text_14</item>
+    </style>
+
+    <style name="MovieText.Bold.30">
+        <item name="android:textSize">@dimen/text_30</item>
+    </style>
+
+    <style name="MovieText.Bold.26">
+        <item name="android:textSize">@dimen/text_26</item>
+    </style>
+
+    <style name="MovieText.Bold.20">
+        <item name="android:textSize">@dimen/text_20</item>
+    </style>
+
+    <style name="MovieText.Bold.16">
+        <item name="android:textSize">@dimen/text_16</item>
+    </style>
+
+    <style name="MovieText.Bold.14">
+        <item name="android:textSize">@dimen/text_14</item>
+    </style>
+
+    <style name="MovieText.30">
+        <item name="android:textSize">@dimen/text_30</item>
+    </style>
+
+    <style name="MovieText.20">
+        <item name="android:textSize">@dimen/text_20</item>
+    </style>
+
+    <style name="MovieText.16">
+        <item name="android:textSize">@dimen/text_16</item>
+    </style>
+
+    <style name="ImageCard">
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="ActorPreview" parent="ImageCard">
+        <item name="cornerSizeTopLeft">@dimen/actors_list_item_corner_radius</item>
+        <item name="cornerSizeTopRight">@dimen/actors_list_item_corner_radius</item>
+        <item name="cornerSizeBottomLeft">@dimen/actors_list_item_corner_radius</item>
+        <item name="cornerSizeBottomRight">@dimen/actors_list_item_corner_radius</item>
+    </style>
+
+    <style name="Poster" parent="ImageCard">
+        <item name="cornerSizeTopLeft">@dimen/poster_list_item_corner_radius</item>
+        <item name="cornerSizeTopRight">@dimen/poster_list_item_corner_radius</item>
+        <item name="cornerSizeBottomLeft">@dimen/poster_list_item_corner_radius</item>
+        <item name="cornerSizeBottomRight">@dimen/poster_list_item_corner_radius</item>
+    </style>
+
+    <style name="Review" parent="ImageCard">
+        <item name="cornerSizeTopLeft">@dimen/review_list_item_rating_corner_radius</item>
+        <item name="cornerSizeTopRight">@dimen/review_list_item_rating_corner_radius</item>
+        <item name="cornerSizeBottomLeft">@dimen/review_list_item_rating_corner_radius</item>
+        <item name="cornerSizeBottomRight">@dimen/review_list_item_rating_corner_radius</item>
     </style>
 </resources>
