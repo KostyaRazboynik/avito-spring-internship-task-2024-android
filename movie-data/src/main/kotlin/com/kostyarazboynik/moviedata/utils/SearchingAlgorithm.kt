@@ -1,7 +1,6 @@
 package com.kostyarazboynik.moviedata.utils
 
 import com.kostyarazboynik.domain.model.movie.Movie
-import com.kostyarazboynik.utils.Logger
 
 /**
  * The simplest algorithm for comparing movie names and user input

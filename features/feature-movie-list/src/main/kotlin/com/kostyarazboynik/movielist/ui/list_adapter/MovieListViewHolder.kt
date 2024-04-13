@@ -12,6 +12,7 @@ class MovieListViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     @SuppressLint("DefaultLocale")
+    @SuppressWarnings("MagicNumber")
     fun bind(movie: Movie) {
         binding.apply {
             movie.poster?.let { moviePoster.load(it.previewUrl) }

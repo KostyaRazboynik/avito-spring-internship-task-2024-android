@@ -27,7 +27,9 @@ object UseCasesModule {
         SearchMovieUseCase(searchMovieRepository)
 
     @Provides
-    fun provideGetAllLocalMoviesUseCase(getAllLocalMoviesRepository: GetAllLocalMoviesRepository): GetAllLocalMoviesUseCase =
+    fun provideGetAllLocalMoviesUseCase(
+        getAllLocalMoviesRepository: GetAllLocalMoviesRepository,
+    ): GetAllLocalMoviesUseCase =
         GetAllLocalMoviesUseCase(getAllLocalMoviesRepository)
 
     @Provides

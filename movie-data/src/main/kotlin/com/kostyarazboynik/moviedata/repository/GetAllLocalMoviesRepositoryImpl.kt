@@ -6,12 +6,9 @@ import com.kostyarazboynik.domain.repository.GetAllLocalMoviesRepository
 import com.kostyarazboynik.moviedata.mapper.toMovie
 import com.kostyarazboynik.moviedata.utils.map
 import com.kostyarazboynik.moviedatabase.MovieDatabase
-import com.kostyarazboynik.moviedatabase.model.MovieDbo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import javax.inject.Inject
 
 class GetAllLocalMoviesRepositoryImpl @Inject constructor(
@@ -22,8 +19,8 @@ class GetAllLocalMoviesRepositoryImpl @Inject constructor(
 
     private fun getAllFromDataBase(): Flow<RequestResult<List<Movie>>> {
         return database.moviesDbo::getAllMovies.asFlow()
-                .map { RequestResult.Success(it) }
-                .map { result -> result.map { movieDbos -> movieDbos.map { it.toMovie() } } }
+            .map { RequestResult.Success(it) }
+            .map { result -> result.map { movieDbos -> movieDbos.map { it.toMovie() } } }
     }
 
     private companion object {

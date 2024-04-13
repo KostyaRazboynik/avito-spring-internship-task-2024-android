@@ -1,10 +1,10 @@
 package com.kostyarazboynik.moviedatabase.converters
 
 import androidx.room.TypeConverter
-import com.kostyarazboynik.moviedatabase.model.MovieCountryDbo
 import com.google.gson.Gson
+import com.kostyarazboynik.moviedatabase.model.MovieCountryDbo
 
-internal object MovieCountryConverter{
+internal object MovieCountryConverter {
 
     private val gson = Gson()
 

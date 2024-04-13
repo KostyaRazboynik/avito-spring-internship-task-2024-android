@@ -68,6 +68,7 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun setUpMovieInfo(movie: Movie) {
         binding.apply {
             movie.apply {
@@ -151,6 +152,7 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun setUpActorsList(actors: List<MoviePerson>) {
         binding.actorsRecyclerView.apply {
             adapter = ActorsListAdapter().apply {
@@ -166,6 +168,7 @@ class MovieDetailsFragment : Fragment() {
     }
 
     @SuppressLint("DefaultLocale")
+    @SuppressWarnings("MagicNumber")
     private fun setUpRating(movie: Movie) {
         binding.apply {
             movieRating.apply {
