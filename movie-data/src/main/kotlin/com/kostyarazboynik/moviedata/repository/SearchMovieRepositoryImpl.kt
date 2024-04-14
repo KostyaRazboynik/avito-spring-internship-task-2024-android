@@ -28,7 +28,6 @@ class SearchMovieRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun searchMovie(movieName: String): Flow<RequestResult<List<Movie>>> {
-
         return searchFromServer(movieName)
             .flatMapConcat { result ->
                 if (result is RequestResult.Error) {

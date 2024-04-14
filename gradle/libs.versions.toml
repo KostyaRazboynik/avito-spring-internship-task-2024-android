@@ -4,45 +4,36 @@ kotlin = "1.9.23"
 ksp = "1.9.23-1.0.20"
 javaVersion = "VERSION_17"
 jvmTarget = "17"
-coreKtx = "1.12.0"
-junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.11.0"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
 fragmentKtx = "1.6.2"
-paging-version = "3.2.1"
-recyclerview-version = "1.3.2"
 swiperefreshlayout-version = "1.1.0"
 viewbindingpropertydelegateFull-version = "1.5.9"
 coil-version = "2.6.0"
-dagger = "2.48"
+dagger = "2.51"
 okhttp = "5.0.0-alpha.1"
-retrofit = "2.9.0"
+retrofit = "2.10.0"
 retrofit-adapters = "1.0.9"
 kotlinx-serialization-json = "1.6.3"
 room = "2.6.1"
 gson = "2.10.1"
 kotlinx-coroutines = "1.8.0"
 retrofit-kotlinx-serialization-converter = "1.0.0"
+annotation = "1.7.1"
 detekt = "1.23.3"
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
-androidx-paggin = { module = "androidx.paging:paging-runtime", version.ref = "paging-version" }
-androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview-version" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout-version" }
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+
 viewbinding-property-delegate-full = { module = "com.github.kirich1409:viewbindingpropertydelegate-full", version.ref = "viewbindingpropertydelegateFull-version" }
 
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil-version" }
@@ -63,7 +54,6 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 
 detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }

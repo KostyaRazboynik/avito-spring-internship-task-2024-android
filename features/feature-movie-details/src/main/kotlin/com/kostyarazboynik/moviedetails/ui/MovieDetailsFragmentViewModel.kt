@@ -8,8 +8,8 @@ import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.domain.model.movie.MoviePoster
 import com.kostyarazboynik.domain.model.movie.MovieReview
-import com.kostyarazboynik.domain.usecase.GetMoviePostersUseCase
 import com.kostyarazboynik.domain.usecase.GetMovieDetailsUseCase
+import com.kostyarazboynik.domain.usecase.GetMoviePostersUseCase
 import com.kostyarazboynik.domain.usecase.GetMovieReviewsUseCase
 import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.Dispatchers

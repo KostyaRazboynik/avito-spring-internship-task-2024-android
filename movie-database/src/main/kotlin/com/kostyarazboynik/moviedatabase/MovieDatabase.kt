@@ -10,7 +10,6 @@ import com.kostyarazboynik.moviedatabase.converters.MovieGenreConverter
 import com.kostyarazboynik.moviedatabase.dao.MovieDao
 import com.kostyarazboynik.moviedatabase.model.MovieDbo
 
-
 /**
  * trick: use 'implementation' room dependencies instead of 'api'
  * in build.gradle.kts(:movie-database).

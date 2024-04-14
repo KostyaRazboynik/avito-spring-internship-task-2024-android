@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 
-
 abstract class ScopeComponentProvider<C : Any> : ComponentProvider<C> {
 
     @PublishedApi
@@ -30,10 +29,7 @@ abstract class ScopeComponentProvider<C : Any> : ComponentProvider<C> {
         coroutineScopeName: String,
         createComponent: (CoroutineScope) -> C
     ) {
-        val scope = CoroutineScope(
-           SupervisorJob() +
-                CoroutineName(coroutineScopeName)
-        )
+        val scope = CoroutineScope(SupervisorJob() + CoroutineName(coroutineScopeName))
         val component = createComponent(scope)
         componentWithScopeOrNull = ComponentWithScope(
             component = component,

@@ -10,7 +10,8 @@ import com.kostyarazboynik.movielist.dagger.FeatureMovieListUiComponentProvider
 import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.timer.StartTimeHolder
 
-class MoviesApp : Application(),
+class MoviesApp :
+    Application(),
     FeatureMovieDetailsUiComponentProvider,
     FeatureMovieListUiComponentProvider {
 

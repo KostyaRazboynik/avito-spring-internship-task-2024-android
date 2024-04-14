@@ -1,6 +1,5 @@
 package com.kostyarazboynik.domain.model.movie
 
-
 data class MovieReview(
     val id: Int,
     val movieId: Int?,
