@@ -20,15 +20,12 @@ import com.kostyarazboynik.movielist.utils.getMoviesByGenre
 import com.kostyarazboynik.movielist.utils.getMoviesByRating
 import com.kostyarazboynik.movielist.utils.getMoviesByYear
 import com.kostyarazboynik.movielist.utils.getYears
-import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @FeatureScope
@@ -54,7 +51,7 @@ class MovieListFragmentViewModel @Inject constructor(
     }
 
     private fun observeNetwork() =
-        viewModelScope.launchNamed("$TAG-viewModelScope-observeNetwork",Dispatchers.IO) {
+        viewModelScope.launchNamed("$TAG-viewModelScope-observeNetwork", Dispatchers.IO) {
             connectivityObserver.observe().collect {
                 internetStatus.emit(it)
             }

@@ -8,7 +8,6 @@ import com.kostyarazboynik.kinopoiskapi.model.response.ReviewListResponse
 import com.kostyarazboynik.moviedata.mapper.toMovieReview
 import com.kostyarazboynik.moviedata.utils.map
 import com.kostyarazboynik.moviedata.utils.toRequestResult
-import com.kostyarazboynik.utils.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -26,9 +25,7 @@ class GetMovieReviewsRepositoryImpl @Inject constructor(
     private fun getAllFromServer(movieId: Int): Flow<RequestResult<List<MovieReview>>> {
         val apiRequest: Flow<RequestResult<ReviewListResponse>> =
             flow { emit(api.loadMovieReviews(movieId = movieId)) }
-                .map { result ->
-                    Logger.d(TAG, "$result")
-                    result.toRequestResult() }
+                .map { result -> result.toRequestResult() }
 
         val start = flowOf<RequestResult<ReviewListResponse>>(RequestResult.InProgress())
 

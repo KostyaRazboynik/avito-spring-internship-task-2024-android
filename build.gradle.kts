@@ -29,7 +29,7 @@ allprojects.onEach { project ->
                     config.setFrom(rootProject.files("detekt-config.yaml"))
                 }
 
-                //project.dependencies.add("detektPlugins", libs.detekt.formatting.get().toString())
+                project.dependencies.add("detektPlugins", libs.detekt.formatting.get().toString())
             }
         }
     }
