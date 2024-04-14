@@ -34,9 +34,6 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.swiperefreshlayout)
 
-    // view binding
-    implementation(libs.viewbinding.property.delegate.full)
-
-    //coil image loader
+    // coil image loader
     implementation(libs.coil)
 }

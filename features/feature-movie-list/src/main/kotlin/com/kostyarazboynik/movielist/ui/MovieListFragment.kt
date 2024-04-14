@@ -24,7 +24,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -66,6 +65,7 @@ class MovieListFragment : Fragment() {
                     viewModel.filterTypeStateFlow.collect { filterType ->
                         if (filterType == Constants.NONE) {
                             filterOptionContainer.isVisible = false
+                            updateUi()
                         } else {
                             filterOptionContainer.isVisible = true
                             setUpFilterOptionType(filterType)
@@ -91,7 +91,6 @@ class MovieListFragment : Fragment() {
     private fun setUpSearchField() {
         binding.searchMovie.apply {
             textChanges()
-                .filterNot { it.isNullOrBlank() }
                 .debounce(ONE_SECOND_ML)
                 .distinctUntilChanged()
                 .onEach {
@@ -108,7 +107,7 @@ class MovieListFragment : Fragment() {
                     filterOptionContainer.isVisible = false
                     filterType.text.clear()
                     searchMovie.text.clear()
-                    viewModel.loadLocalData()
+                    updateUi()
                     isRefreshing = false
                 }
             }
@@ -152,12 +151,13 @@ class MovieListFragment : Fragment() {
         }
     }
 
+    @SuppressWarnings("MagicNumber")
     private fun setUpRecyclerView() {
         binding.apply {
             recyclerView.apply {
                 adapter = MovieListAdapter(
                     loadNewMoviesCallBack = {
-                        if (searchMovie.text.isEmpty()) {
+                        if (searchMovie.text.isEmpty() && viewModel.internetAvailable.value) {
                             viewModel.loadAllData()
                         }
                     },

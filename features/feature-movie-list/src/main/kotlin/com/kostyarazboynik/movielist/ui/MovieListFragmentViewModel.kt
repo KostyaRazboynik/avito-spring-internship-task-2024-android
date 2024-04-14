@@ -40,8 +40,8 @@ class MovieListFragmentViewModel @Inject constructor(
         MutableStateFlow(UiState.Initial)
     val uiStateFlow: StateFlow<UiState<List<Movie>>> = _uiStateFlow
 
-    private val internetStatus =
-        MutableStateFlow(ConnectivityObserver.Status.Available)
+    private val _internetAvailable = MutableStateFlow(false)
+    val internetAvailable: StateFlow<Boolean> = _internetAvailable
 
     private val _filterTypeStateFlow = MutableStateFlow(Constants.NONE)
     val filterTypeStateFlow: StateFlow<String> = _filterTypeStateFlow
@@ -52,13 +52,17 @@ class MovieListFragmentViewModel @Inject constructor(
 
     private fun observeNetwork() =
         viewModelScope.launchNamed("$TAG-viewModelScope-observeNetwork", Dispatchers.IO) {
-            connectivityObserver.observe().collect {
-                internetStatus.emit(it)
+            connectivityObserver.observe().collect { status ->
+                val internetAvailable = status == ConnectivityObserver.Status.Available
+                _internetAvailable.emit(internetAvailable)
+                if (internetAvailable) {
+                    loadLocalData()
+                }
             }
         }
 
     fun loadAllData() {
-        if (internetStatus.value == ConnectivityObserver.Status.Available) {
+        if (_internetAvailable.value) {
             loadAllDataForced()
         } else {
             loadLocalData()

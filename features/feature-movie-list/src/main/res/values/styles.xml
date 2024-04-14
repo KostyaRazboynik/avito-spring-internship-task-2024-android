@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="MovieText">
         <item name="fontFamily">@font/segoe</item>
         <item name="android:textColor">@color/highlight_text_color</item>

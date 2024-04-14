@@ -61,9 +61,6 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.fragment.ktx)
 
-    // view binding
-    implementation(libs.viewbinding.property.delegate.full)
-
     // dagger dependency injection pattern
     kapt(libs.dagger.compiler)
     annotationProcessor(libs.dagger.processor)

@@ -10,8 +10,7 @@ activity = "1.8.2"
 constraintlayout = "2.1.4"
 fragmentKtx = "1.6.2"
 swiperefreshlayout-version = "1.1.0"
-viewbindingpropertydelegateFull-version = "1.5.9"
-coil-version = "2.6.0"
+coil = "2.6.0"
 dagger = "2.51"
 okhttp = "5.0.0-alpha.1"
 retrofit = "2.10.0"
@@ -34,9 +33,7 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout-version" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 
-viewbinding-property-delegate-full = { module = "com.github.kirich1409:viewbindingpropertydelegate-full", version.ref = "viewbindingpropertydelegateFull-version" }
-
-coil = { group = "io.coil-kt", name = "coil", version.ref = "coil-version" }
+coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 
 dagger = { module = "com.google.dagger:dagger-android", version.ref = "dagger" }
 dagger-processor = { module = "com.google.dagger:dagger-android-processor", version.ref = "dagger" }
