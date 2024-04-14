@@ -15,7 +15,7 @@ import com.kostyarazboynik.moviedata.repository.SearchMovieRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Reusable
-[a-z]+((\.[a-z][A-Za-z0-9]*)+(_)+(\.[a-z][A-Za-z0-9])*)*
+
 @Module
 interface RepositoryModule {
 

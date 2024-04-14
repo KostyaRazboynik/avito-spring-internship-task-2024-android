@@ -2,6 +2,7 @@ package com.kostyarazboynik.kinopoisksearch.dagger
 
 import android.app.Application
 import android.content.Context
+import com.kostyarazboynik.dagger.AppScope
 import com.kostyarazboynik.kinopoisksearch.MainActivity
 import com.kostyarazboynik.kinopoisksearch.MoviesApp
 import com.kostyarazboynik.kinopoisksearch.dagger.module.BuildTypeModule

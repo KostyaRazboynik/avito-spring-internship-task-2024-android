@@ -2,7 +2,7 @@ package com.kostyarazboynik.moviedata.utils
 
 import com.kostyarazboynik.domain.model.RequestResult
 
-internal fun <I: Any, O: Any> RequestResult<I>.map(mapper: (I) -> O): RequestResult<O> {
+internal fun <I : Any, O : Any> RequestResult<I>.map(mapper: (I) -> O): RequestResult<O> {
     return when (this) {
         is RequestResult.Success -> RequestResult.Success(mapper(data))
         is RequestResult.Error -> RequestResult.Error(data?.let(mapper))
@@ -10,7 +10,7 @@ internal fun <I: Any, O: Any> RequestResult<I>.map(mapper: (I) -> O): RequestRes
     }
 }
 
-internal fun <T: Any> Result<T>.toRequestResult(): RequestResult<T> {
+internal fun <T : Any> Result<T>.toRequestResult(): RequestResult<T> {
     return when {
         isSuccess -> RequestResult.Success(getOrThrow())
         isFailure -> RequestResult.Error()

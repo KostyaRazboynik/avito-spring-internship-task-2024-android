@@ -11,6 +11,7 @@ import com.kostyarazboynik.domain.model.movie.MovieReview
 import com.kostyarazboynik.domain.usecase.GetMoviePostersUseCase
 import com.kostyarazboynik.domain.usecase.GetMovieDetailsUseCase
 import com.kostyarazboynik.domain.usecase.GetMovieReviewsUseCase
+import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.extensions.launchNamed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -56,6 +57,7 @@ class MovieDetailsFragmentViewModel @Inject constructor(
     fun loadMovie(movie: Movie) {
         viewModelScope.launchNamed("$TAG-viewModelScope-loadMovie", Dispatchers.IO) {
             _uiStateFlow.emit(UiState.Success(movie))
+            Logger.d(TAG, "movie=$movie")
             _uiStateFlow.emitAll(getMovieDetailsUseCase(movie.id))
         }
     }

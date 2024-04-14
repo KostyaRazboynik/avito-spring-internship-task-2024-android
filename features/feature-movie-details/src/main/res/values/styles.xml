@@ -16,16 +16,8 @@
         <item name="android:textColor">@color/transparent_text_color</item>
     </style>
 
-    <style name="MovieText.Transparent.Bold">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="MovieText.Transparent.Bold.20">
+    <style name="MovieText.20">
         <item name="android:textSize">@dimen/text_20</item>
-    </style>
-
-    <style name="MovieText.Transparent.Bold.16">
-        <item name="android:textSize">@dimen/text_16</item>
     </style>
 
     <style name="MovieText.Transparent.16">
@@ -49,22 +41,6 @@
     </style>
 
     <style name="MovieText.Bold.16">
-        <item name="android:textSize">@dimen/text_16</item>
-    </style>
-
-    <style name="MovieText.Bold.14">
-        <item name="android:textSize">@dimen/text_14</item>
-    </style>
-
-    <style name="MovieText.30">
-        <item name="android:textSize">@dimen/text_30</item>
-    </style>
-
-    <style name="MovieText.20">
-        <item name="android:textSize">@dimen/text_20</item>
-    </style>
-
-    <style name="MovieText.16">
         <item name="android:textSize">@dimen/text_16</item>
     </style>
 

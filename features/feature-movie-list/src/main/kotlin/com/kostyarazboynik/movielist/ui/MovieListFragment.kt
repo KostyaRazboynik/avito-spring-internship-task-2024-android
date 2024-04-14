@@ -10,8 +10,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import com.kostyarazboynik.domain.model.UiState
 import com.kostyarazboynik.domain.model.movie.Movie
 import com.kostyarazboynik.feature_movie_list.R
@@ -37,7 +35,7 @@ class MovieListFragment : Fragment() {
             .provideFeatureMovieListUiComponent().getViewModel()
     }
 
-    private val binding: FragmentMovieListLayoutBinding by viewBinding(createMethod = CreateMethod.INFLATE)
+    private lateinit var binding: FragmentMovieListLayoutBinding
 
     private val listAdapter: MovieListAdapter
         get() = binding.recyclerView.adapter as MovieListAdapter
@@ -46,7 +44,10 @@ class MovieListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = binding.root
+    ): View {
+        binding = FragmentMovieListLayoutBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,7 +92,7 @@ class MovieListFragment : Fragment() {
         binding.searchMovie.apply {
             textChanges()
                 .filterNot { it.isNullOrBlank() }
-                .debounce(1000)
+                .debounce(ONE_SECOND_ML)
                 .distinctUntilChanged()
                 .onEach {
                     viewModel.searchMovie(this.text.toString())
@@ -111,7 +112,6 @@ class MovieListFragment : Fragment() {
                     isRefreshing = false
                 }
             }
-
         }
     }
 
@@ -165,7 +165,7 @@ class MovieListFragment : Fragment() {
                         navigateToMovieDetailsFragment(movie)
                     },
                 )
-                layoutManager = GridLayoutManager(context, 2)
+                layoutManager = GridLayoutManager(context.applicationContext, 2)
             }
         }
     }
@@ -208,7 +208,7 @@ class MovieListFragment : Fragment() {
 
     companion object {
         private const val TAG = "MoviesListFragment"
-
+        private const val ONE_SECOND_ML = 1000L
         private const val FRAME_CONTENT_ID = "frame_content_id"
 
         fun newInstance(

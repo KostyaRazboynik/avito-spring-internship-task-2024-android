@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.CreateMethod
-import by.kirich1409.viewbindingdelegate.viewBinding
 import coil.load
 import com.kostyarazboynik.domain.connection.ConnectivityObserver
 import com.kostyarazboynik.domain.model.UiState
@@ -24,8 +22,8 @@ import com.kostyarazboynik.moviedetails.ui.actors_list_adapter.ActorsListAdapter
 import com.kostyarazboynik.moviedetails.ui.posters_list_adapter.PostersListAdapter
 import com.kostyarazboynik.moviedetails.ui.reviews_list_adapter.ReviewsListAdapter
 import com.kostyarazboynik.moviedetails.utils.getList
-import com.kostyarazboynik.utils.Logger
 import com.kostyarazboynik.utils.extensions.launchNamed
+import kotlinx.coroutines.flow.collectLatest
 
 class MovieDetailsFragment : Fragment() {
 
@@ -34,26 +32,58 @@ class MovieDetailsFragment : Fragment() {
             .provideFeatureMovieDetailsUiComponent().getViewModel()
     }
 
-    private val binding: FragmentMovieDetailsLayoutBinding by viewBinding(createMethod = CreateMethod.INFLATE)
+    private lateinit var binding: FragmentMovieDetailsLayoutBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = binding.root
+    ): View {
+        binding = FragmentMovieDetailsLayoutBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
 
     @Suppress("DEPRECATION")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (arguments?.getParcelable(MOVIE_LIST_ITEM_KEY) as? Movie)?.let { movie ->
-            viewModel.loadMovie(movie)
             updateUi()
+            setUpBackButton()
+            checkInternetConnection(movie)
+            updateUiState(UiState.Success(movie))
+        }
+    }
+
+    private fun checkInternetConnection(movie: Movie) {
+        viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-checkInternetConnection") {
+            viewModel.internetStatus.collectLatest { status ->
+                val visibility = status == ConnectivityObserver.Status.Available
+                viewModel.loadMovie(movie)
+                if (visibility) {
+                    viewModel.loadMoviePosters(movie)
+                    viewModel.loadMovieReviews(movie)
+                }
+                binding.apply {
+                    actors.isVisible = visibility
+                    actorsList.isVisible = visibility
+                    posters.isVisible = visibility
+                    postersList.isVisible = visibility
+                    reviews.isVisible = visibility
+                    reviewsList.isVisible = visibility
+                }
+            }
+        }
+    }
+
+    private fun setUpBackButton() {
+        binding.backButton.setOnClickListener {
+            requireActivity().onBackPressed()
         }
     }
 
     private fun updateUi() {
         viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-updateUI") {
-            viewModel.uiStateFlow.collect { uiState ->
+            viewModel.uiStateFlow.collectLatest { uiState ->
                 updateUiState(uiState)
             }
         }
@@ -73,57 +103,44 @@ class MovieDetailsFragment : Fragment() {
         binding.apply {
             movie.apply {
                 poster?.let { moviePoster.load(it.url) }
-                movieName.apply {
-                    if (name == null) {
-                        isVisible = false
-                    } else {
-                        text = name
-                    }
+                name?.let {
+                    movieName.isVisible = true
+                    movieName.text = name
                 }
-                description?.let { movieDescription.text = it }
+                description?.let {
+                    movieName.isVisible = true
+                    movieDescription.text = it
+                }
                 persons?.let { setUpActorsList(it) }
-                movieYearGenresCountriesLength.text = context?.getString(
-                    R.string.movie_year_genres_countries_length,
-                    year.toString(),
-                    genres?.map { it.name },
-                    countries?.map { it.name },
-                    ((movieLength ?: 0) / 60).toString(),
-                    ((movieLength ?: 0) - (((movieLength ?: 0) / 60) * 60))
-                )
+
+                try {
+                    movieYearGenresCountriesLength.apply {
+                        text = context?.getString(
+                            R.string.movie_year_genres_countries_length,
+                            year.toString(),
+                            genres?.map { it.name },
+                            countries?.map { it.name },
+                            ((movieLength ?: 0) / 60).toString(),
+                            ((movieLength ?: 0) - (((movieLength ?: 0) / 60) * 60))
+                        )
+                        isVisible = true
+                    }
+                } catch (_: Exception) {
+                    movieYearGenresCountriesLength.isVisible = false
+                }
             }
         }
         setUpRating(movie)
         setUpPostersList()
         setUpReviewList()
-        setUpLoadedInfo(movie)
-    }
-
-    private fun setUpLoadedInfo(movie: Movie) {
-        viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-setUpLoadedInfo") {
-            viewModel.internetStatus.collect { status ->
-                viewModel.loadMoviePosters(movie)
-                viewModel.loadMovieReviews(movie)
-                val visibility = status == ConnectivityObserver.Status.Available
-                binding.apply {
-                    actors.isVisible = visibility
-                    actorsList.isVisible = visibility
-                    posters.isVisible = visibility
-                    postersList.isVisible = visibility
-                    reviews.isVisible = visibility
-                    reviewsList.isVisible = visibility
-                }
-            }
-        }
     }
 
     private fun setUpReviewList() {
         binding.reviewsRecyclerView.apply {
             adapter = ReviewsListAdapter().apply {
                 viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-setUpReviews") {
-                    viewModel.reviewStateFlow.collect {
-                        val list = it.getList()
-                        Logger.d(TAG, "uistate=$it")
-                        submitList(list)
+                    viewModel.reviewStateFlow.collectLatest {
+                        submitList(it.getList())
                     }
                 }
             }
@@ -139,7 +156,7 @@ class MovieDetailsFragment : Fragment() {
         binding.postersRecyclerView.apply {
             adapter = PostersListAdapter().apply {
                 viewModel.viewModelScope.launchNamed("$TAG-viewModelScope-setUpPosters") {
-                    viewModel.postersStateFlow.collect {
+                    viewModel.postersStateFlow.collectLatest {
                         submitList(it.getList())
                     }
                 }

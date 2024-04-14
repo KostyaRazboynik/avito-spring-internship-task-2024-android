@@ -34,7 +34,7 @@ class GetMovieDetailsRepositoryImpl @Inject constructor(
                 it.toMovie().apply {
                     this.persons?.filter { person ->
                         val profession = person.enProfession
-                        profession!= null && profession == "actor"
+                        profession != null && profession == "actor"
                     }
                 }
             }

@@ -7,7 +7,8 @@ import com.kostyarazboynik.domain.model.movie.MoviePerson
 import com.kostyarazboynik.feature_movie_details.databinding.ActorsListItemLayoutBinding
 import com.kostyarazboynik.moviedetails.ui.actors_list_adapter.diffutil.ActorsListDiffUtilCallback
 
-class ActorsListAdapter: ListAdapter<MoviePerson, ActorsListViewHolder>(ActorsListDiffUtilCallback()) {
+class ActorsListAdapter :
+    ListAdapter<MoviePerson, ActorsListViewHolder>(ActorsListDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorsListViewHolder =
         ActorsListViewHolder(
